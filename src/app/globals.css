@@ -3,17 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
+  --foreground-rgb: 43, 34, 34;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
 }
 
 body {
@@ -24,4 +16,134 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  height: 100vh;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 72px;
+}
+
+.heading-1,
+h1 {
+  /* heading-1 */
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 4.5rem */
+}
+.heading-2,
+h2 {
+  /* heading-2 */
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%; /* 3rem */
+}
+.heading-4,
+h4,
+h3 {
+  /* heading-4 */
+  font-size: 1.25rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 1.875rem */
+}
+.caption-1 {
+  /* caption-1 */
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 1.125rem */
+}
+
+body,
+p,
+span {
+  /* body-1 */
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 1.5rem */
+}
+
+p {
+  margin-bottom: 1.5rem;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+ol {
+  list-style: decimal;
+  margin-inline-start: 1.5rem;
+}
+ul {
+  list-style: disc;
+  margin-inline-start: 1.5rem;
+}
+
+blockquote {
+  @apply p-1 bg-b30 mb-1five text-b300;
+}
+
+.pagination > li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+}
+.pagination > li > a {
+  padding: 0.5rem;
+}
+.pagination > li:hover {
+  cursor: pointer;
+}
+.pagination > li.selected,
+.pagination > li:hover {
+  background-color: theme(colors[r300]);
+  color: theme(colors[b0]);
+}
+
+.slider-wrapper .slick-list .slick-track {
+  @apply flex sm:gap-4 gap-2;
+}
+
+.slider-wrapper .slick-list .slick-track .slick-slide {
+  @apply w-full flex justify-center !important;
+}
+.slider-wrapper .slick-list .slick-track .slick-slide div .slider-item {
+  @apply flex items-center !important;
+}
+
+.slider-wrapper-hero .slick-list {
+  @apply p-0 !important;
+}
+
+.slider-wrapper-hero .slick-slide > div {
+  @apply w-full;
+}
+
+.sub-nav-item {
+  @apply hidden;
+}
+
+.nav-item:hover > div > .sub-nav-item {
+  @apply flex;
+}
+
+@media screen and (min-width: 768px) {
+  .heading-1,
+  h1 {
+    /* heading-1 */
+    font-size: 3rem;
+  }
+  .heading-2,
+  h2 {
+    /* heading-2 */
+    font-size: 2rem;
+    font-weight: 400;
+  }
 }
