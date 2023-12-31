@@ -21,15 +21,27 @@ const FetchData = async () => {
     `${process.env.NEXT_PUBLIC_STRAPI_API}/about?${params()}`
   );
   const jsonResponse = await response.json();
-  return {
-    id: jsonResponse.data.id,
-    title: jsonResponse.data.attributes.title,
-    address: jsonResponse.data.attributes.address,
-    websiteLink: jsonResponse.data.attributes.websiteLink,
-    websiteName: jsonResponse.data.attributes.websiteName,
-    email: jsonResponse.data.attributes.email,
-    phone: jsonResponse.data.attributes.phone,
-  };
+  if (jsonResponse.data) {
+    return {
+      id: jsonResponse.data.id,
+      title: jsonResponse.data.attributes.title,
+      address: jsonResponse.data.attributes.address,
+      websiteLink: jsonResponse.data.attributes.websiteLink,
+      websiteName: jsonResponse.data.attributes.websiteName,
+      email: jsonResponse.data.attributes.email,
+      phone: jsonResponse.data.attributes.phone,
+    };
+  } else {
+    return {
+      id: null,
+      title: null,
+      address: null,
+      websiteLink: null,
+      websiteName: null,
+      email: null,
+      phone: null,
+    };
+  }
 };
 
 export const metadata = {

@@ -33,11 +33,15 @@ const ArticleSection = ({ children }) => {
   return (
     <div className="w-full flex justify-center gap-8 items-center">
       <div className="box-border xl:w-90 w-full flex flex-col xl:px-7five sm:px-4 xs:px-1 items-center gap-1five py-4">
-        <h2 className="heading-2">Articles</h2>
-        <div className="grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-3 gap-6">
-          {generateContent()}
-        </div>
-        <Button text="See More" clickAction={() => clickAction()} />
+        {children && (
+          <>
+            <h2 className="heading-2">Articles</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-3 gap-6">
+              {generateContent()}
+            </div>
+            <Button text="See More" clickAction={() => clickAction()} />
+          </>
+        )}
       </div>
     </div>
   );

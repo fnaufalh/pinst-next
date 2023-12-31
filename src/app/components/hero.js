@@ -20,22 +20,24 @@ const Hero = ({ title }) => {
 
 const HeroMain = ({ children }) => {
   let content = [];
-  children.carouselImage.map((item, index) => {
-    content.push(
-      <div key={index} className="w-full h-hero relative">
-        <Image
-          fill
-          key={index}
-          src={process.env.NEXT_PUBLIC_STRAPI_URL + item.url}
-          alt={item.name}
-          sizes="(min-width: 320px) 100vh"
-          className="object-cover"
-          priority
-          quality={100}
-        />
-      </div>
-    );
-  });
+  if (children) {
+    children.carouselImage.map((item, index) => {
+      content.push(
+        <div key={index} className="w-full h-hero relative">
+          <Image
+            fill
+            key={index}
+            src={process.env.NEXT_PUBLIC_STRAPI_URL + item.url}
+            alt={item.name}
+            sizes="(min-width: 320px) 100vh"
+            className="object-cover"
+            priority
+            quality={100}
+          />
+        </div>
+      );
+    });
+  }
 
   const settings = {
     slidesToShow: 1, // This use max-width
@@ -51,23 +53,31 @@ const HeroMain = ({ children }) => {
       <div className="slider-wrapper-hero h-hero w-full">
         <Slider {...settings}>{content}</Slider>
       </div>
-      <div className="absolute flex items-end justify-center inset-0 bg-hero-pattern h-hero">
-        <div className="absolute flex flex-row items-center gap-1 p-1five bg-b900 bg-opacity-60 bottom-1 sm:bottom-4 mx-1 sm:mx-0">
-          <div className="w-4 h-4 hidden sm:block sm:relative">
-            <Image
-              fill
-              src={process.env.NEXT_PUBLIC_STRAPI_URL + children.logo.url}
-              alt={children.logo.name}
-            />
-          </div>
-          <div className="flex flex-col justify-start gap-0five text-b0">
-            <span className="font-bold text-center sm:text-left">
-              {children.title}
-            </span>
-            <span className="text-center sm:text-left">{children.slogan}</span>
+      {children && (
+        <div className="absolute flex items-end justify-center inset-0 bg-hero-pattern h-hero">
+          <div className="absolute flex flex-row items-center gap-1 p-1five bg-b900 bg-opacity-60 bottom-1 sm:bottom-4 mx-1 sm:mx-0">
+            {children && (
+              <div className="w-4 h-4 hidden sm:block sm:relative">
+                <Image
+                  fill
+                  src={process.env.NEXT_PUBLIC_STRAPI_URL + children.logo.url}
+                  alt={children.logo.name}
+                />
+              </div>
+            )}
+            {children && (
+              <div className="flex flex-col justify-start gap-0five text-b0">
+                <span className="font-bold text-center sm:text-left">
+                  {children.title}
+                </span>
+                <span className="text-center sm:text-left">
+                  {children.slogan}
+                </span>
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
