@@ -11,8 +11,7 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "pinst.co.id",
-        port: "*",
+        hostname: "cms.pinst.co.id",
       },
     ],
   },
