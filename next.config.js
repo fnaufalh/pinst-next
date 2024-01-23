@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
+    domains: ["cms.pinst.co.id"],
     remotePatterns: [
       {
         protocol: "http",
