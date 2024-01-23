@@ -9,6 +9,11 @@ const nextConfig = {
         hostname: "localhost",
         port: "1337",
       },
+      {
+        protocol: "https",
+        hostname: "pinst.co.id",
+        port: "*",
+      },
     ],
   },
 };
