@@ -1,13 +1,7 @@
 import Button from "./button";
 import Image from "next/image";
 
-const CardArticle = ({
-  thumbnail,
-  title,
-  summary,
-  publishedAt,
-  clickAction,
-}) => {
+const CardNews = ({ thumbnail, title, summary, publishedAt, clickAction }) => {
   const formatDate = (string) => {
     var options = { day: "numeric", month: "long", year: "numeric" };
     return new Date(string).toLocaleDateString([], options);
@@ -76,11 +70,22 @@ const CardOtherProduct = ({ src, name }) => {
   );
 };
 
-const CardService = ({ title, content }) => {
+const CardService = ({ title, content, icon }) => {
+  console.log(icon);
   return (
     <div className="w-full flex flex-col items-start bg-b0">
       <div className="flex flex-col items-start gap-1five p-2five">
-        <span className="heading-4">{title}</span>
+        <div className="flex md:flex-row flex-col gap-1five">
+          <div className="w-4 h-4 relative">
+            <Image
+              fill
+              src={process.env.NEXT_PUBLIC_STRAPI_URL + icon.url}
+              alt={icon.name}
+              sizes="(min-width: 320px) 100vw"
+            />
+          </div>
+          <span className="heading-4 flex items-center">{title}</span>
+        </div>
         <div dangerouslySetInnerHTML={{ __html: content }}></div>
       </div>
     </div>
@@ -172,7 +177,7 @@ const CardTeamModalPortrait = ({ team }) => {
 };
 
 export {
-  CardArticle,
+  CardNews,
   CardProduct,
   CardOtherProduct,
   CardService,

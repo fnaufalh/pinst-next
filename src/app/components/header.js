@@ -22,34 +22,34 @@ function Header() {
     },
     {
       id: 2,
-      name: "Articles",
-      slug: "/articles",
-      children: null,
-    },
-    {
-      id: 3,
       name: "Solutions",
       slug: null,
       children: [
         {
           id: 1,
-          name: "Services",
-          slug: "/services",
-          children: null,
-        },
-        {
-          id: 2,
           name: "Products",
           slug: "/products",
           children: null,
         },
         {
-          id: 3,
+          id: 2,
           name: "Projects",
           slug: "/projects",
           children: null,
         },
+        {
+          id: 3,
+          name: "Services",
+          slug: "/services",
+          children: null,
+        },
       ],
+    },
+    {
+      id: 3,
+      name: "News",
+      slug: "/news",
+      children: null,
     },
     {
       id: 4,

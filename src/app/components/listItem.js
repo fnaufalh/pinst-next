@@ -27,7 +27,7 @@ const ListItem = ({
       <div
         className={
           (active ? "bg-r300 text-b0 " : "bg-b0 ") +
-          "sm:w-full md:w-20 p-1five hover:bg-r300 hover:text-b0 hover:cursor-pointer no-underline flex flex-row gap-0five items-center justify-start"
+          "w-full p-1five hover:bg-r300 hover:text-b0 hover:cursor-pointer no-underline flex flex-row gap-0five items-center justify-start"
         }
         onClick={() => {
           if (showDescription) {
@@ -64,7 +64,7 @@ const ListItem = ({
         <div
           className={
             (toggleMenu ? "inline " : "hidden ") +
-            " flex flex-col gap-1five sm:w-full md:w-20 p-1five border-solid border-b40 border-b-2 items-center "
+            " flex flex-col gap-1five w-full p-1five border-solid border-b40 border-b-2 items-center "
           }
         >
           {description ? description : "No Descriptions"}

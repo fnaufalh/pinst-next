@@ -11,12 +11,12 @@ const ClientsSection = ({ children }) => {
       content.push(
         <div
           key={index}
-          className="min-w-4 min-h-4 flex justify-center filter grayscale hover:grayscale-0 transition ease-in"
+          className="min-w-4 min-h-4 w-4 h-4 relative flex justify-center filter grayscale hover:grayscale-0 transition ease-in"
         >
           <Image
+            fill
             src={process.env.NEXT_PUBLIC_STRAPI_URL + item.url}
             alt={item.name}
-            fill
           />
         </div>
       );

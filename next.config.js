@@ -3,7 +3,6 @@ const nextConfig = {
   reactStrictMode: false,
   images: {
     unoptimized: false,
-    domains: ["cms.pinst.co.id", "v2.pinst.co.id", "pinst.co.id"],
     remotePatterns: [
       {
         protocol: "http",
@@ -17,6 +16,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "v2.pinst.co.id",
+      },
+      {
+        protocol: "https",
+        hostname: "pinst.co.id",
       },
     ],
   },

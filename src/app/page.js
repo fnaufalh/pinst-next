@@ -1,14 +1,54 @@
 "use client";
 import ClientsSection from "./components/clientsSection";
 import { HeroMain } from "./components/hero";
-import ArticleSection from "./components/articleSection";
+import NewsSection from "./components/newsSection";
+import FooterSection from "./components/footerSection";
 import QueryString from "qs";
 import { useEffect, useState } from "react";
+import AboutSection from "./components/aboutSection";
 
 const Home = () => {
   const [dataHero, setDataHero] = useState(null);
+  const [dataFooter, setDataFooter] = useState(null);
   const [dataClients, setDataClients] = useState(null);
-  const [dataArticles, setDataArticles] = useState(null);
+  const [dataNews, setDataNews] = useState(null);
+
+  useEffect(() => {
+    let isSubscribed = true;
+
+    const FetchFooterData = async () => {
+      const params = () =>
+        QueryString.stringify(
+          {
+            populate: "*",
+          },
+          {
+            encodeValuesOnly: true,
+          }
+        );
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_STRAPI_API}/about?${params()}`
+      );
+      const jsonResponse = await response.json();
+      const data = {
+        id: jsonResponse.data.id,
+        title: jsonResponse.data.attributes.title,
+        address: jsonResponse.data.attributes.address,
+        websiteLink: jsonResponse.data.attributes.websiteLink,
+        websiteName: jsonResponse.data.attributes.websiteName,
+        email: jsonResponse.data.attributes.email,
+        phone: jsonResponse.data.attributes.phone,
+      };
+
+      if (isSubscribed) {
+        setDataFooter(data);
+      }
+    };
+
+    FetchFooterData().catch(console.error);
+    return () => (isSubscribed = false);
+  }, []);
 
   useEffect(() => {
     let isSubscribed = true;
@@ -95,7 +135,7 @@ const Home = () => {
   useEffect(() => {
     let isSubscribed = true;
 
-    const FetchArticleData = async () => {
+    const FetchNewsData = async () => {
       const params = () =>
         QueryString.stringify(
           {
@@ -130,11 +170,11 @@ const Home = () => {
       });
 
       if (isSubscribed) {
-        setDataArticles(dataResult);
+        setDataNews(dataResult);
       }
     };
 
-    FetchArticleData().catch(console.error);
+    FetchNewsData().catch(console.error);
     return () => (isSubscribed = false);
   }, []);
 
@@ -142,7 +182,9 @@ const Home = () => {
     <div className="bg-b20">
       <HeroMain>{dataHero}</HeroMain>
       <ClientsSection>{dataClients}</ClientsSection>
-      <ArticleSection>{dataArticles}</ArticleSection>
+      <AboutSection />
+      <NewsSection>{dataNews}</NewsSection>
+      <FooterSection>{dataFooter}</FooterSection>
     </div>
   );
 };

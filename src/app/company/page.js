@@ -5,6 +5,7 @@ import fetch from "node-fetch";
 import QueryString from "qs";
 import { remark } from "remark";
 import { marked } from "marked";
+import CopyrightSection from "../components/copyrightSection";
 
 const fetchData = async () => {
   const params = () =>
@@ -42,6 +43,8 @@ const fetchData = async () => {
 
 const Company = async () => {
   const data = await fetchData();
+  const date = new Date();
+  const thisYear = date.getFullYear();
 
   return (
     <>
@@ -76,6 +79,7 @@ const Company = async () => {
           </div>
         </div>
       )}
+      <CopyrightSection />
     </>
   );
 };

@@ -3,13 +3,18 @@ import { Hero } from "@/app/components/hero";
 import QueryString from "qs";
 import { remark } from "remark";
 import { marked } from "marked";
-import DetailArticle from "@/app/components/detailArticle";
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import ListNews from "@/app/components/listNews";
+import { useEffect, useState, createContext } from "react";
+import CopyrightSection from "../components/copyrightSection";
 
-const Page = () => {
+export const newsContext = createContext();
+
+const News = () => {
   const [data, setData] = useState(null);
-  const search = useParams();
+  const [meta, setMeta] = useState(null);
+  const [newPage, setNewPage] = useState(1);
+  const date = new Date();
+  const thisYear = date.getFullYear();
 
   useEffect(() => {
     let isSubscribed = true;
@@ -19,7 +24,10 @@ const Page = () => {
         QueryString.stringify(
           {
             populate: "*",
-            filters: { slug: { $eq: search.slug } },
+            pagination: {
+              pageSize: 9,
+              page: newPage,
+            },
           },
           {
             encodeValuesOnly: true,
@@ -55,6 +63,7 @@ const Page = () => {
 
       if (isSubscribed) {
         setData(dataResult);
+        setMeta(jsonResponse.meta);
       }
     };
 
@@ -62,16 +71,17 @@ const Page = () => {
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 
     return () => (isSubscribed = false);
-  }, [search]);
+  }, [newPage]);
 
   return (
-    <>
-      <Hero title="Article" />
+    <newsContext.Provider value={{ setNewPage, data, meta }}>
+      <Hero title="News" />
       <div className="w-full flex justify-center bg-b20">
-        {data && <DetailArticle>{data}</DetailArticle>}
+        {data && <ListNews />}
       </div>
-    </>
+      <CopyrightSection />
+    </newsContext.Provider>
   );
 };
 
-export default Page;
+export default News;

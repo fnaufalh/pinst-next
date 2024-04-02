@@ -76,6 +76,9 @@ module.exports = {
       "7five": "7.5rem", //120px
     },
     extend: {
+      opacity: {
+        2: "0.02",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":

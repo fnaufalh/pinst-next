@@ -1,6 +1,7 @@
 import { Hero } from "../components/hero";
 import ContentTeams from "../components/contentTeams";
 import QueryString from "qs";
+import CopyrightSection from "../components/copyrightSection";
 
 const FetchData = async () => {
   const params = () =>
@@ -88,11 +89,14 @@ const ReformatData = ({ data }) => {
 const Teams = async () => {
   const fetchData = await FetchData();
   const data = ReformatData(fetchData);
+  const date = new Date();
+  const thisYear = date.getFullYear();
 
   return (
     <>
       <Hero title="Teams" />
       <ContentTeams>{data}</ContentTeams>
+      <CopyrightSection />
     </>
   );
 };

@@ -4,6 +4,7 @@ import Button from "./button";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import CopyrightSection from "./copyrightSection";
 
 const FooterSection = ({ children }) => {
   const [formData, setFormData] = useState({
@@ -124,9 +125,7 @@ const FooterSection = ({ children }) => {
           </div>
         )}
       </div>
-      <div className="box-border  xl:w-90 lg:w-full xl:px-7five sm:px-4 xs:px-1 flex items-start justify-center border-t border-b40 py-2 text-center">
-        Copyright © PT. PUTERA INSTRUMENINDO {thisYear}. All Rights Reserved.
-      </div>
+      <CopyrightSection />
     </div>
   );
 };

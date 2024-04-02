@@ -11,6 +11,7 @@ import ListOtherProducts from "../components/listOtherProducts";
 import QueryString from "qs";
 import { remark } from "remark";
 import { marked } from "marked";
+import CopyrightSection from "../components/copyrightSection";
 
 export const paginationContext = createContext();
 export const brandContext = createContext();
@@ -41,6 +42,9 @@ const Products = () => {
   const [category, setCategory] = useState(initCategory);
   const [newPage, setNewPage] = useState(1);
   const [meta, setMeta] = useState(null);
+
+  const date = new Date();
+  const thisYear = date.getFullYear();
 
   useEffect(() => {
     const fetchBrandData = async () => {
@@ -310,7 +314,11 @@ const Products = () => {
                   <div className="xl:w-90 xl:px-7five md:px-7five sm:px-4 px-1 py-1 flex flex-row gap-1">
                     <ModalTrigger
                       value={brand}
-                      clickAction={() => clickAction(brands, "Brands", false)}
+                      clickAction={() => {
+                        if (brands && brands.length > 0) {
+                          clickAction(brands, "Brands", false);
+                        }
+                      }}
                     />
                     <ModalTrigger
                       value={catalogue}
@@ -357,6 +365,7 @@ const Products = () => {
                   </div>
                 </div>
               </div>
+              <CopyrightSection />
               {isVisible && (
                 <ModalDialogFilter
                   title={titleDialog}

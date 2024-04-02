@@ -1,25 +1,25 @@
 "use client";
 import React, { useContext, useState } from "react";
-import { CardArticle } from "../components/card";
+import { CardNews } from "./card";
 import ReactPaginate from "react-paginate";
-import { articleContext } from "../articles/page";
+import { newsContext } from "../news/page";
 import { useRouter } from "next/navigation";
 
-const ListArticles = () => {
+const ListNews = () => {
   const router = useRouter();
-  const { setNewPage, data, meta } = useContext(articleContext);
+  const { setNewPage, data, meta } = useContext(newsContext);
   const handlePageClick = (event) => {
     setNewPage(event.selected + 1);
   };
 
   const clickAction = (slug) => {
-    return router.push("articles/" + slug);
+    return router.push("news/" + slug);
   };
 
   const generateContent = () => {
     return data.map((item, index) => {
       return (
-        <CardArticle
+        <CardNews
           key={index}
           thumbnail={item.thumbnail}
           title={item.title}
@@ -54,4 +54,4 @@ const ListArticles = () => {
   );
 };
 
-export default ListArticles;
+export default ListNews;

@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 
-const DetailArticle = ({ children }) => {
+const DetailNews = ({ children }) => {
   const formatDate = (string) => {
     var options = { day: "numeric", month: "long", year: "numeric" };
     return new Date(string).toLocaleDateString([], options);
@@ -44,4 +44,4 @@ const DetailArticle = ({ children }) => {
   );
 };
 
-export default DetailArticle;
+export default DetailNews;

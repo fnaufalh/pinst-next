@@ -4,6 +4,7 @@ import HTMLReactParser from "html-react-parser";
 import QueryString from "qs";
 import { remark } from "remark";
 import { marked } from "marked";
+import CopyrightSection from "../components/copyrightSection";
 
 const FetchMtProject = async () => {
   const params = () =>
@@ -64,6 +65,9 @@ const Projects = async () => {
   const mtProject = await FetchMtProject();
   const recentProject = await FetchRecentProject();
 
+  const date = new Date();
+  const thisYear = date.getFullYear();
+
   const generateContentRecently = () => {
     return recentProject.map((item, index) => (
       <div key={index}>
@@ -110,6 +114,7 @@ const Projects = async () => {
           </div>
         </div>
       </div>
+      <CopyrightSection />
     </div>
   );
 };

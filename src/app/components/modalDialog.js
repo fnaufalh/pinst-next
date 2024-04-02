@@ -231,7 +231,7 @@ const ModalDialogFilter = ({ title, data, showDescription, handleHide }) => {
     <>
       <Overlay />
       <div className="w-full flex flex-row justify-center items-center">
-        <div className="top-4 bottom-4 w-auto z-50 bg-b0 flex flex-col fixed">
+        <div className="top-4 bottom-4 w-full sm:w-50 z-50 bg-b0 flex flex-col fixed">
           <div className="flex flex-row justify-between w-full p-1five">
             <span className="heading-4 w-full">{title}</span>
             <Image
