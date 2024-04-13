@@ -322,9 +322,9 @@ const ModalDialogProductDetails = ({ data, handleHide }) => {
           </div>
           <div
             className={
-              data.description
+              (data.description
                 ? "justify-start items-start "
-                : "justify-center items-center " +
+                : "justify-center items-center ") +
                   "flex h-full overflow-auto p-t-1five"
             }
             dangerouslySetInnerHTML={{
