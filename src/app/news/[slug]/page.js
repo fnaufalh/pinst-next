@@ -1,68 +1,34 @@
 "use client";
 import { Hero } from "@/app/components/hero";
-import QueryString from "qs";
-import { remark } from "remark";
-import { marked } from "marked";
 import DetailNews from "@/app/components/detailNews";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import CopyrightSection from "../components/copyrightSection";
+import CopyrightSection from "../../components/copyrightSection";
+import { fetchNewsData } from "../../api/newsService";
 
 const Page = () => {
   const [data, setData] = useState(null);
   const search = useParams();
-  const date = new Date();
-  const thisYear = date.getFullYear();
 
   useEffect(() => {
     let isSubscribed = true;
 
-    const FetchData = async () => {
-      const params = () =>
-        QueryString.stringify(
-          {
-            populate: "*",
-            filters: { slug: { $eq: search.slug } },
-          },
-          {
-            encodeValuesOnly: true,
-          }
-        );
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_API}/articles?${params()}`
-      );
-      const jsonResponse = await response.json();
-      const processedContent = await Promise.all(
-        jsonResponse.data.map((item) => {
-          return remark().processSync(item.attributes.content);
-        })
-      );
-      const dataResult = jsonResponse.data.map((item, index) => {
-        return {
-          id: item.id,
-          title: item.attributes.title,
-          slug: item.attributes.slug,
-          summary: item.attributes.summary,
-          content: marked.parse(processedContent[index].toString()),
-          thumbnail: item.attributes.thumbnail.data
-            ? {
-                id: item.attributes.thumbnail.data.id,
-                name: item.attributes.thumbnail.data.attributes.hash,
-                url: item.attributes.thumbnail.data.attributes.url,
-              }
-            : null,
-          publishedAt: item.attributes.publishedAt,
-        };
-      });
-
-      if (isSubscribed) {
-        setData(dataResult);
-      }
+    const params = {
+      populate: "*",
+      filters: {
+        slug: search.slug,
+      },
     };
 
-    FetchData().catch(console.error);
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    fetchNewsData(params)
+      .then(({ dataResult }) => {
+        if (isSubscribed) {
+          setData(dataResult);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+      });
 
     return () => (isSubscribed = false);
   }, [search]);

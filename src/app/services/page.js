@@ -1,70 +1,27 @@
 "use client";
 import { CardService } from "../components/card";
 import { Hero } from "../components/hero";
-import QueryString from "qs";
-import { remark } from "remark";
-import { marked } from "marked";
 import { useEffect, useState } from "react";
 import CopyrightSection from "../components/copyrightSection";
+import { fetchServicesData } from "../api/servicesService";
 
 const Services = () => {
   const [data, setData] = useState(null);
-  const date = new Date();
-  const thisYear = date.getFullYear();
-
-  // const generateContent = () => {
-  //   return data.map((item, index) => (
-  //     <CardService
-  //       key={index}
-  //       title={item.title}
-  //       content={item.content}
-  //       icon={item.icon}
-  //     />
-  //   ));
-  // };
 
   useEffect(() => {
     let isSubscribed = true;
 
-    const FetchData = async () => {
-      const params = () =>
-        QueryString.stringify(
-          {
-            populate: "*",
-          },
-          {
-            encodeValuesOnly: true,
-          }
-        );
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_API}/services?${params()}`
-      );
-      const jsonResponse = await response.json();
-      const processedContent = await Promise.all(
-        jsonResponse.data.map((item) => {
-          return remark().processSync(item.attributes.content);
-        })
-      );
-      const dataResult = jsonResponse.data.map((item, index) => {
-        return {
-          id: item.id,
-          title: item.attributes.title,
-          content: marked.parse(processedContent[index].toString()),
-          icon: {
-            id: item.attributes.icon.data.id,
-            name: item.attributes.icon.data.attributes.hash,
-            url: item.attributes.icon.data.attributes.url,
-          },
-        };
+    fetchServicesData()
+      .then((data) => { 
+        if (isSubscribed) {
+          setData(data);
+        }
+      }
+    )
+      .catch((error) => {
+        console.error("Error fetching data", error);
       });
 
-      if (isSubscribed) {
-        setData(dataResult);
-      }
-    };
-
-    FetchData().catch(console.error);
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
 
     return () => (isSubscribed = false);

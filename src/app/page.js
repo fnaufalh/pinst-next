@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { fetchHeroData } from "../app/api/heroService.js";
 import { fetchClientData } from "../app/api/clientService.js";
 import { fetchNewsData } from "../app/api/newsService.js";
-import { fetchExclusiveBrandsData } from "../app/api/exclusiveBrandsService.js";
+import { fetchExclusiveBrandsData } from "./api/exclusiveBrandService.js";
 
 const Home = () => {
   const [dataHero, setDataHero] = useState(null);

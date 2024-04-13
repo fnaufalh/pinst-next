@@ -71,7 +71,6 @@ const CardOtherProduct = ({ src, name }) => {
 };
 
 const CardService = ({ title, content, icon }) => {
-  console.log(icon);
   return (
     <div className="w-full flex flex-col items-start bg-b0">
       <div className="flex flex-col items-start gap-1five p-2five">
@@ -79,7 +78,7 @@ const CardService = ({ title, content, icon }) => {
           <div className="w-4 h-4 relative">
             <Image
               fill
-              src={process.env.NEXT_PUBLIC_STRAPI_URL + icon.url}
+              src={icon.url}
               alt={icon.name}
               sizes="(min-width: 320px) 100vw"
             />

@@ -17,8 +17,8 @@ const DetailNews = ({ children }) => {
                 key={index}
                 className="box-border w-full xl:w-90 px-1 sm:px-4 md:px-7five py-1 sm:py-4 flex flex-col items-center sm:items-start gap-1five"
               >
-                <div className="w-full heading-1">{item.title}</div>
-                <div className="w-full caption-1">
+                <div className="w-full heading-1 text-center">{item.title}</div>
+                <div className="w-full caption-1 text-center">
                   {"Published at " + formatDate(item.publishedAt)}
                 </div>
                 {item.thumbnail && (
