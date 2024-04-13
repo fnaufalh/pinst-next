@@ -1,14 +1,17 @@
 import { fetchData } from "./apiService";
 
-export const fetchNewsData = async () => {
-  const params = {
-    populate: "*",
-    pagination: { pageSize: 3 },
-  };
+export const fetchNewsData = async (getParams) => {
+  const params = !getParams
+    ? {
+        populate: "*",
+        pagination: { pageSize: 3 },
+        
+      }
+    : getParams;
 
   const jsonResponse = await fetchData(
     'articles',
-    params
+    {...params, sort: 'publishedAt:desc'}
   );
 
   const dataResult = jsonResponse.data.map((item) => {
@@ -28,6 +31,6 @@ export const fetchNewsData = async () => {
       publishedAt: item.attributes.publishedAt,
     };
   });
-
-  return dataResult;
+  const metaResult = jsonResponse.meta;
+  return { dataResult, metaResult };
 };

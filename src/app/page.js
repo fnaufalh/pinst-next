@@ -51,9 +51,9 @@ const Home = () => {
     let isSubscribed = true;
 
     fetchNewsData()
-      .then((data) => {
+      .then(({dataResult}) => {
         if (isSubscribed) {
-          setDataNews(data);
+          setDataNews(dataResult);
         }
       })
       .catch((error) => {

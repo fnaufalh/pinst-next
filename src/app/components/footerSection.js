@@ -3,9 +3,9 @@ import { Input, TextArea } from "./input";
 import Button from "./button";
 import Image from "next/image";
 import Link from "next/link";
-import QueryString from "qs";
 import { useState, useEffect } from "react";
 import CopyrightSection from "./copyrightSection";
+import { fetchFooterData } from "../api/footerService";
 
 const FooterSection = () => {
   const [formData, setFormData] = useState({
@@ -19,39 +19,18 @@ const FooterSection = () => {
   useEffect(() => {
     let isSubscribed = true;
 
-    const FetchFooterData = async () => {
-      const params = () =>
-        QueryString.stringify(
-          {
-            populate: "*",
-          },
-          {
-            encodeValuesOnly: true,
-          }
-        );
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_API}/about?${params()}`
-      );
-      const jsonResponse = await response.json();
-      const data = {
-        id: jsonResponse.data.id,
-        title: jsonResponse.data.attributes.title,
-        address: jsonResponse.data.attributes.address,
-        websiteLink: jsonResponse.data.attributes.websiteLink,
-        websiteName: jsonResponse.data.attributes.websiteName,
-        email: jsonResponse.data.attributes.email,
-        phone: jsonResponse.data.attributes.phone,
-      };
-
-      if (isSubscribed) {
-        setDataFooter(data);
-      }
-    };
-
-    FetchFooterData().catch(console.error);
+    fetchFooterData().then((data) => {
+        if (isSubscribed) {
+          setDataFooter(data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+      });
+    
     return () => (isSubscribed = false);
-  }, []);
+  },
+  []);
 
   const clickAction = () => {
     if (formData.fullname && formData.company && formData.inquiry) {
