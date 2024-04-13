@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const ModalTrigger = ({ value, clickAction }) => {
-  console.log("ModalTrigger", value, clickAction);
+  
   return (
     <>
       <div

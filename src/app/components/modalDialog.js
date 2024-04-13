@@ -96,7 +96,8 @@ const ModalDialog = ({ title, data, handleHide }) => {
 const ModalDialogFilter = ({ title, data, showDescription, handleHide }) => {
   const pathname = usePathname();
   const router = useRouter();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParams = useSearchParams();
+  const newSearchParams = new URLSearchParams(searchParams.toString());
   const { brand, setBrand, initBrand } = useContext(brandContext);
   const { catalogue, setCatalogue, initCatalogue, setCatalogues } =
     useContext(catalogueContext);
@@ -118,6 +119,16 @@ const ModalDialogFilter = ({ title, data, showDescription, handleHide }) => {
           setCategory(initCategory);
           setCategories(null);
           setBrand(item);
+          if (item.id === null) {
+            newSearchParams.delete("brand");
+          } else {
+            newSearchParams.set("brand", item.id);
+          }
+          newSearchParams.delete("catalogue");
+          newSearchParams.delete("solution"); 
+          newSearchParams.delete("category");
+          newSearchParams.delete("page");
+          router.replace(pathname + "?" + newSearchParams.toString());
         }
         break;
       case "Catalogues":
@@ -129,6 +140,15 @@ const ModalDialogFilter = ({ title, data, showDescription, handleHide }) => {
           setCategory(initCategory);
           setCategories(null);
           setCatalogue(item);
+          if (item.id === null) {
+            newSearchParams.delete("catalogue");
+          } else {
+            newSearchParams.set("catalogue", item.id);
+          }
+          newSearchParams.delete("solution");
+          newSearchParams.delete("category");
+          newSearchParams.delete("page");
+          router.push(pathname + "?" + newSearchParams.toString());
         }
         break;
       case "Solutions":
@@ -138,10 +158,25 @@ const ModalDialogFilter = ({ title, data, showDescription, handleHide }) => {
           setCategory(initCategory);
           setCategories(null);
           setSolution(item);
+          if (item.id === null) {
+            newSearchParams.delete("solution");
+          } else {
+            newSearchParams.set("solution", item.id);
+          }
+          newSearchParams.delete("category");
+          newSearchParams.delete("page");
+          router.push(pathname + "?" + newSearchParams.toString());
         }
         break;
       case "Categories":
         setCategory(item);
+        if (item.id === null) {
+          newSearchParams.delete("category");
+        } else {
+          newSearchParams.set("category", item.id);
+        }
+        newSearchParams.delete("page");
+        router.push(pathname + "?" + newSearchParams.toString());
         break;
       default:
         break;
@@ -159,7 +194,6 @@ const ModalDialogFilter = ({ title, data, showDescription, handleHide }) => {
         return solution.name === item ? true : false;
       case "Categories":
         return category.name === item ? true : false;
-
       default:
         break;
     }

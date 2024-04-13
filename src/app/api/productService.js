@@ -26,7 +26,7 @@ export const fetchBrandData = async (getParams) => {
         : null,
     };
   });
-  console.log('brand data', dataResult);
+  
   return dataResult;
 }
 
@@ -59,6 +59,7 @@ export const fetchProductData = async (getParams) => {
   const params = {
     populate: "*",
     pagination: { pageSize: 9 },
+    sort: 'publishedAt:desc',
     ...getParams,
   }
 
@@ -71,7 +72,7 @@ export const fetchProductData = async (getParams) => {
     return {
       id: item.id,
       name: item.attributes.name,
-      description: marked(item.attributes.description),
+      description: item.attributes.description ? marked(item.attributes.description) : null,
       image: item.attributes.image.data
         ? {
             id: item.attributes.image.data.id,
@@ -103,7 +104,7 @@ export const fetchCatalogueData = async (getParams) => {
       name: item.attributes.name,
     };
   });
-  console.log('catalogue data', dataResult);
+
   return dataResult;
 }
 

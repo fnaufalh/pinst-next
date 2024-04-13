@@ -5,7 +5,7 @@ import {
   useState,
   useMemo,
 } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Hero } from "../components/hero";
 import ModalTrigger from "../components/modalTrigger";
 import {
@@ -25,7 +25,10 @@ export const categoryContext = createContext();
 export const ModalDialogProductDetailsContext = createContext();
 
 const Products = () => {
+  const pathname = usePathname();
+  const router = useRouter();
   const searchParams = useSearchParams();
+  const newSearchParams = useMemo(() => new URLSearchParams(searchParams.toString()), [searchParams]);
   const [otherProducts, setOtherProducts] = useState(null);
   const [products, setProducts] = useState(null);
   const [brands, setBrands] = useState(null);
@@ -57,8 +60,28 @@ const Products = () => {
     image: null
   }), []);
   const [category, setCategory] = useState(initCategory);
-  const [newPage, setNewPage] = useState(1);
+  const [newPage, setNewPage] = useState(searchParams.get("page") || 1);
   const [meta, setMeta] = useState(null);
+
+  const [brandParam, setBrandParam] = useState(searchParams.get("brand"));
+  const [catalogueParam, setCatalogueParam] = useState(
+    searchParams.get("catalogue")
+  );
+  const [solutionParam, setSolutionParam] = useState(
+    searchParams.get("solution")
+  );
+  const [categoryParam, setCategoryParam] = useState(
+    searchParams.get("category")
+  );
+  const [pageParam, setPageParam] = useState(searchParams.get("page"));
+
+  useEffect(() => {
+    setBrandParam(searchParams.get("brand"));
+    setCatalogueParam(searchParams.get("catalogue"));
+    setSolutionParam(searchParams.get("solution"));
+    setCategoryParam(searchParams.get("category"));
+    setPageParam(searchParams.get("page"));
+  }, [searchParams]);
 
   useEffect(() => {
     let isSubscribed = true;
@@ -67,8 +90,8 @@ const Products = () => {
       .then((data) => {
         if (isSubscribed) {
           setBrands(data);
-          if (searchParams.has("brand") && data.length > 0) {
-            setBrand(data.find((item) => item.id == searchParams.get("brand")));
+          if (brandParam && data.length > 0) {
+            setBrand(data.find((item) => item.id == brandParam));
           }
         }
       })
@@ -76,6 +99,167 @@ const Products = () => {
         console.error("Error fetching data", error);
       });
     
+    return () => (isSubscribed = false);
+  }, [brandParam]);
+
+  useEffect(() => {
+    let isSubscribed = true;
+
+    const filters = {
+      filters: {
+        ...(brandParam
+          ? {
+              brand: {
+                id: brandParam,
+              },
+              ...(catalogueParam
+                ? {
+                    catalogue: {
+                      id: catalogueParam,
+                    },
+                    ...(solutionParam
+                      ? {
+                          solution: {
+                            id: solutionParam,
+                          },
+                          ...(categoryParam
+                            ? {
+                                categoryProduct: {
+                                  id: categoryParam,
+                                },
+                              }
+                            : null),
+                        }
+                      : null),
+                  }
+                : null),
+            }
+          : null),
+      },
+      ...(pageParam && {
+        pagination: { page: pageParam, pageSize: 9 },
+      }),
+    };
+
+    fetchProductData(filters)
+      .then(({ dataResult, metaResult}) => {
+        if (isSubscribed) {
+          setProducts(dataResult);
+          setMeta(metaResult);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+      });
+    
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    return () => (isSubscribed = false);
+  }, [searchParams, brandParam, catalogueParam, solutionParam, categoryParam, pageParam]);
+
+  useEffect(() => {
+    let isSubscribed = true;
+    const filters = {
+      filters: {
+        ...(brandParam && {
+          brand: {
+            id: brandParam,
+          },
+        }),
+      },
+    };
+    
+    fetchCatalogueData(filters)
+      .then((data) => {
+        if (isSubscribed) {
+          setCatalogues(data);
+          if (catalogueParam && data.length > 0) {
+            setCatalogue(data.find((item) => item.id == catalogueParam));
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+      });
+    
+    return () => (isSubscribed = false);
+  }, [catalogueParam, brandParam]);
+
+  useEffect(() => {
+    let isSubscribed = true;
+
+    const filters = {
+      filters: {
+        ...(brandParam && {
+          brand: {
+            id: brandParam,
+          },
+          ...(catalogueParam && {
+            catalogue: {
+              id: catalogueParam,
+            },
+          }),
+        }),
+      },
+    };
+    
+    fetchSolutionData(filters)
+      .then((data) => {
+        if (isSubscribed) {
+          setSolutions(data);
+          if (solutionParam && data.length > 0) {
+            setSolution(data.find((item) => item.id == solutionParam));
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+      });
+    
+    return () => (isSubscribed = false);
+  }, [catalogueParam, brandParam, solutionParam]);
+
+  useEffect(() => {
+    let isSubscribed = true;
+    
+    const filters = {
+      filters: {
+        ...(brandParam && {
+          brand: {
+            id: brandParam,
+          },
+          ...(catalogueParam && {
+            catalogue: {
+              id: catalogueParam,
+            },
+            ...(solutionParam && {
+              solution: {
+                id: solutionParam,
+              },
+            }),
+          }),
+        }),
+      },
+    };
+
+    fetchCategoryData(filters)
+      .then((data) => {
+        if (isSubscribed) {
+          setCategories(data);
+          if (categoryParam && data.length > 0) {
+            setCategory(data.find((item) => item.id == categoryParam));
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+      });
+    
+    return () => (isSubscribed = false);
+  }, [solutionParam, catalogueParam, brandParam, categoryParam]);
+
+  useEffect(() => {
+    let isSubscribed = true;
+
     fetchOtherProductData()
       .then((data) => {
         if (isSubscribed) {
@@ -87,155 +271,7 @@ const Products = () => {
       });
     
     return () => (isSubscribed = false);
-  }, [searchParams]);
-
-  useEffect(() => {
-    let isSubscribed = true;
-
-    const filters = {
-      filters: {
-        ...(searchParams.has("brand") && {
-          brand: {
-            id: searchParams.get("brand")
-          },
-        }),
-        ...(searchParams.has("catalogue") && {
-          catalogue: {
-            id: searchParams.get("catalogue")
-          },
-        }),
-        ...(searchParams.has("solution") && {
-          solution: {
-            id: searchParams.get("solution")
-          },
-        }),
-        ...(searchParams.has("category") && {
-          category: {
-            id: searchParams.get("category")
-          },
-        }),
-      },
-    };
-
-    fetchProductData(filters)
-      .then(({ dataResult, metaResult}) => {
-        if (isSubscribed) {
-          setProducts(dataResult);
-          setMeta(metaResult);
-          setNewPage(1);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data", error);
-      });
-    
-    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-    return () => (isSubscribed = false);
-  }, [brand, catalogue, solution, category, searchParams]);
-
-  useEffect(() => {
-    let isSubscribed = true;
-    const filters = {
-      filters: {
-        ...(searchParams.has("brand") && {
-          brand: {
-            id: searchParams.get("brand")
-          },
-        }),
-      },
-    };
-    
-    fetchCatalogueData(filters)
-      .then((data) => {
-        if (isSubscribed) {
-          setCatalogues(data);
-          setNewPage(1);
-          if (searchParams.has("catalogue") && data.length > 0) {
-            setCatalogue(data.find((item) => item.id == searchParams.get("catalogue")));
-          }
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data", error);
-      });
-    
-    return () => (isSubscribed = false);
-  }, [brand, searchParams]);
-
-  useEffect(() => {
-    let isSubscribed = true;
-
-    const filters = {
-      filters: {
-        ...(searchParams.has("brand") && {
-          brand: {
-            id: searchParams.get("brand")
-          },
-        }),
-        ...(searchParams.has("catalogue") && {
-          catalogue: {
-            id: searchParams.get("catalogue")
-          },
-        }),
-      },
-    };
-    
-    fetchSolutionData(filters)
-      .then((data) => {
-        if (isSubscribed) {
-          setSolutions(data);
-          setNewPage(1);
-          if (searchParams.has("solution") && data.length > 0) {
-            setSolution(data.find((item) => item.id == searchParams.get("solution")));
-          }
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data", error);
-      });
-    
-    return () => (isSubscribed = false);
-  }, [catalogue, searchParams]);
-
-  useEffect(() => {
-    let isSubscribed = true;
-    
-    const filters = {
-      filters: {
-        ...(searchParams.has("brand") && {
-          brand: {
-            id: searchParams.get("brand")
-          },
-        }),
-        ...(searchParams.has("catalogue") && {
-          catalogue: {
-            id: searchParams.get("catalogue")
-          },
-        }),
-        ...(searchParams.has("solution") && {
-          solution: {
-            id: searchParams.get("solution")
-          },
-        }),
-      },
-    };
-
-    fetchCategoryData(filters)
-      .then((data) => {
-        if (isSubscribed) {
-          setCategories(data);
-          setNewPage(1);
-          if (searchParams.has("category") && data.length > 0) {
-            setCategory(data.find((item) => item.id == searchParams.get("category")));
-          }
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data", error);
-      });
-    
-    return () => (isSubscribed = false);
-  }, [solution, searchParams]);
+  }, []);
 
   const handleHide = () => {
     setIsVisible(false);
@@ -282,7 +318,7 @@ const Products = () => {
                     <ModalTrigger
                       value={catalogue}
                       clickAction={() => {
-                        if (catalogues && catalogues.length > 0) {
+                        if (brand.id && catalogues.length > 0) {
                           clickAction(catalogues, "Catalogues", false);
                         }
                       }}
@@ -290,7 +326,7 @@ const Products = () => {
                     <ModalTrigger
                       value={solution}
                       clickAction={() => {
-                        if (solutions && solutions.length > 0) {
+                        if (catalogue.id && solutions.length > 0) {
                           clickAction(solutions, "Solutions", true);
                         }
                       }}
@@ -298,7 +334,7 @@ const Products = () => {
                     <ModalTrigger
                       value={category}
                       clickAction={() => {
-                        if (categories && categories.length > 0) {
+                        if (solution.id && categories.length > 0) {
                           clickAction(categories, "Categories", true);
                         }
                       }}

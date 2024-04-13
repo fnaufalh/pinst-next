@@ -5,15 +5,21 @@ import {
 } from "../products/page";
 import { useContext } from "react";
 import ReactPaginate from "react-paginate";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 const ListProducts = ({ children }) => {
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const newSearchParams = new URLSearchParams(searchParams.toString());
   const { setIsVisibleProductDetails, setDataDialog } = useContext(
     ModalDialogProductDetailsContext
   );
   const { meta, newPage, setNewPage } = useContext(paginationContext);
-
   const handlePageClick = (event) => {
     setNewPage(event.selected + 1);
+    newSearchParams.set("page", event.selected + 1);
+    router.push(pathname + "?" + newSearchParams.toString());
   };
 
   const clickAction = (item) => {
@@ -45,7 +51,7 @@ const ListProducts = ({ children }) => {
         marginPagesDisplayed={2}
         pageCount={meta.pagination.pageCount}
         renderOnZeroPageCount={null}
-        forcePage={newPage - 1}
+        forcePage={(newPage > meta.pagination.pageCount) ? 0 : newPage - 1}
       />
     );
   };
