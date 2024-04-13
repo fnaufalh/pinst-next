@@ -27,7 +27,7 @@ const HeroMain = ({ children }) => {
           <Image
             fill
             key={index}
-            src={process.env.NEXT_PUBLIC_STRAPI_URL + item.url}
+            src={item.url}
             alt={item.name}
             sizes="(min-width: 320px) 100vh"
             className="object-cover"
@@ -55,58 +55,52 @@ const HeroMain = ({ children }) => {
       </div>
       {children && (
         <div className="absolute flex items-end justify-center inset-0 bg-hero-pattern h-hero">
-          <div className="absolute flex flex-col sm:flex-row items-center p-1five sm:px-4 sm:py-1five bg-b900 bg-opacity-60 w-full bottom-0 mx-0">
-            <div className="flex flex-row gap-0five sm:gap-1 w-full">
+          <div className="w-full flex justify-center bg-b900 bg-opacity-60 bottom-0 mx-0">
+            <div className="box-border xl:w-90 w-full md:px-7five sm:px-4 p-1 sm:py-1five flex flex-col sm:flex-row items-center">
+              <div className="flex flex-row gap-0five sm:gap-1 w-full">
+                {children && (
+                  <div className="w-4 h-4 hidden sm:block sm:relative">
+                    <Image
+                      fill
+                      src={children.logo.url}
+                      alt={children.logo.name}
+                    />
+                  </div>
+                )}
+                {children && (
+                  <div className="flex flex-col justify-start sm:justify-center text-b0 border-b-[1px] border-b0 border-solid sm:border-none w-full pb-1 sm:pb-0">
+                    <span className="font-bold text-center sm:text-left">
+                      {children.title}
+                    </span>
+                    <span className="caption-1 text-center sm:text-left">
+                      {children.slogan}
+                    </span>
+                  </div>
+                )}
+              </div>
               {children && (
-                <div className="w-4 h-4 hidden sm:block sm:relative">
-                  <Image
-                    fill
-                    src={process.env.NEXT_PUBLIC_STRAPI_URL + children.logo.url}
-                    alt={children.logo.name}
-                  />
-                </div>
-              )}
-              {children && (
-                <div className="flex flex-col justify-start sm:justify-center text-b0 border-b-[1px] border-b0 border-solid sm:border-none w-full pb-1 sm:pb-0">
-                  <span className="font-bold  text-center sm:text-left">
-                    {children.title}
+                <div className="flex flex-col lg:flex-row justify-start sm:justify-end text-b0 w-full pt-1 sm:pt-0 lg:gap-2 gap-0five">
+                  <span className="text-center justify-center sm:justify-end sm:text-right caption-1 flex items-end">
+                    {children.partnerLabel}
                   </span>
-                  <span className="caption-1 text-center sm:text-left">
-                    {children.slogan}
-                  </span>
+                  <div className="flex flex-wrap justify-center items-end md:justify-end gap-1five">
+                    {children.partnerBrands.map((brand, index) => (
+                      <div
+                        key={index}
+                        className="min-w-[49px] sm:min-w-[75px] min-h-[28px] sm:min-h-[43px] relative"
+                      >
+                        <Image
+                          src={brand.url}
+                          alt={brand.name}
+                          fill
+                          sizes="(max-width: 160px) 100vw, 160px"
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
-            {children && (
-              <div className="flex flex-col justify-start sm:justify-end text-b0 w-full pt-1 sm:pt-0 gap-0five">
-                <span className="text-center sm:text-right caption-1">
-                  Exclusive Agent for
-                </span>
-                <div className="flex flex-wrap justify-center sm:justify-end gap-1five">
-                  <div className="min-w-[49px] sm:min-w-[75px] min-h-[28px] sm:min-h-[43px] relative">
-                    <Image
-                      src={`/images/brands/logo-envea-hero.png`}
-                      alt="Envea"
-                      fill
-                    />
-                  </div>
-                  <div className="min-w-[49px] sm:min-w-[75px] min-h-[28px] sm:min-h-[43px] relative">
-                    <Image
-                      src={`/images/brands/logo-durag-hero.png`}
-                      alt="Durag"
-                      fill
-                    />
-                  </div>
-                  <div className="min-w-[49px] sm:min-w-[75px] min-h-[28px] sm:min-h-[43px] relative">
-                    <Image
-                      src={`/images/brands/logo-aai-hero.png`}
-                      alt="AAI"
-                      fill
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}

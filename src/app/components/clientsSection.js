@@ -15,7 +15,8 @@ const ClientsSection = ({ children }) => {
         >
           <Image
             fill
-            src={process.env.NEXT_PUBLIC_STRAPI_URL + item.url}
+            sizes="(max-width: 160px) 100vw, 160px"
+            src={item.url}
             alt={item.name}
           />
         </div>

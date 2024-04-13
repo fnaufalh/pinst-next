@@ -1,50 +1,29 @@
-// "use client";
+"use client";
 import { Hero } from "../components/hero";
 import Image from "next/image";
-import fetch from "node-fetch";
-import QueryString from "qs";
-import { remark } from "remark";
 import { marked } from "marked";
 import CopyrightSection from "../components/copyrightSection";
+import { fetchCompanyData } from "../api/companyService";
+import { useEffect, useState } from "react";
 
-const fetchData = async () => {
-  const params = () =>
-    QueryString.stringify(
-      {
-        populate: "*",
-      },
-      {
-        encodeValuesOnly: true,
+const Company = () => {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    let isSubscribed = true;
+
+    fetchCompanyData().then((data) => {
+      if (isSubscribed) {
+        setData(data);
       }
-    );
+    }
+    ).catch((error) => {
+      console.error("Error fetching data", error);
+    });
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_STRAPI_API}/company?${params()}`
-  );
-  const jsonResponse = await response.json();
-  if (jsonResponse.data) {
-    const processedContent = remark().processSync(
-      jsonResponse.data.attributes.content
-    );
-    const contentHtml = processedContent.toString();
-    return {
-      image: jsonResponse.data.attributes.image.data.attributes,
-      title: jsonResponse.data.attributes.title,
-      content: contentHtml,
-    };
-  } else {
-    return {
-      image: null,
-      title: null,
-      content: null,
-    };
+    return () => (isSubscribed = false);
   }
-};
-
-const Company = async () => {
-  const data = await fetchData();
-  const date = new Date();
-  const thisYear = date.getFullYear();
+  , []);
 
   return (
     <>
@@ -57,7 +36,7 @@ const Company = async () => {
                 <Image
                   height={282}
                   width={282}
-                  src={process.env.NEXT_PUBLIC_STRAPI_URL + data.image.url}
+                  src={data.image.url}
                   alt={data.image.name}
                 />
               </div>

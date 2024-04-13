@@ -134,6 +134,11 @@ blockquote {
   @apply flex;
 }
 
+.quoteDiv strong {
+    @apply font-bold text-r300 block;
+
+  }
+
 @media screen and (min-width: 768px) {
   .heading-1,
   h1 {

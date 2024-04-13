@@ -3,18 +3,55 @@ import { Input, TextArea } from "./input";
 import Button from "./button";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import QueryString from "qs";
+import { useState, useEffect } from "react";
 import CopyrightSection from "./copyrightSection";
 
-const FooterSection = ({ children }) => {
+const FooterSection = () => {
   const [formData, setFormData] = useState({
     fullname: "",
     company: "",
     inquiry: "",
   });
 
-  const date = new Date();
-  const thisYear = date.getFullYear();
+  const [dataFooter, setDataFooter] = useState(null);
+
+  useEffect(() => {
+    let isSubscribed = true;
+
+    const FetchFooterData = async () => {
+      const params = () =>
+        QueryString.stringify(
+          {
+            populate: "*",
+          },
+          {
+            encodeValuesOnly: true,
+          }
+        );
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_STRAPI_API}/about?${params()}`
+      );
+      const jsonResponse = await response.json();
+      const data = {
+        id: jsonResponse.data.id,
+        title: jsonResponse.data.attributes.title,
+        address: jsonResponse.data.attributes.address,
+        websiteLink: jsonResponse.data.attributes.websiteLink,
+        websiteName: jsonResponse.data.attributes.websiteName,
+        email: jsonResponse.data.attributes.email,
+        phone: jsonResponse.data.attributes.phone,
+      };
+
+      if (isSubscribed) {
+        setDataFooter(data);
+      }
+    };
+
+    FetchFooterData().catch(console.error);
+    return () => (isSubscribed = false);
+  }, []);
 
   const clickAction = () => {
     if (formData.fullname && formData.company && formData.inquiry) {
@@ -66,12 +103,12 @@ const FooterSection = ({ children }) => {
           </div>
           <Button text="Send" type="submit" clickAction={() => clickAction()} />
         </div>
-        {children && (
+        {dataFooter && (
           <div className="flex flex-col gap-6 items-start lg:w-5/12 w-full">
             <div className="font-bold sm:text-left text-center w-full">
-              {children.title}
+              {dataFooter.title}
             </div>
-            {children.address && (
+            {dataFooter.address && (
               <div className="flex flex-row gap-0five items-start w-full relative">
                 <Image
                   src="/images/icons/icon-bagage.svg"
@@ -80,10 +117,10 @@ const FooterSection = ({ children }) => {
                   height={20}
                   priority
                 />
-                <div className="whitespace-pre-line">{children.address}</div>
+                <div className="whitespace-pre-line">{dataFooter.address}</div>
               </div>
             )}
-            {children.websiteName && children.websiteLink && (
+            {dataFooter.websiteName && dataFooter.websiteLink && (
               <div className="flex flex-row gap-0five items-start w-full relative">
                 <Image
                   src="/images/icons/icon-globe.svg"
@@ -91,12 +128,12 @@ const FooterSection = ({ children }) => {
                   width={20}
                   height={20}
                 />
-                <Link href={children.websiteLink} target="_blank" replace>
-                  {children.websiteName}
+                <Link href={dataFooter.websiteLink} target="_blank" replace>
+                  {dataFooter.websiteName}
                 </Link>
               </div>
             )}
-            {children.email && (
+            {dataFooter.email && (
               <div className="flex flex-row gap-0five items-start w-full relative">
                 <Image
                   src="/images/icons/icon-mail.svg"
@@ -104,12 +141,12 @@ const FooterSection = ({ children }) => {
                   width={20}
                   height={20}
                 />
-                <Link href={"mailto:" + children.email} target="_self">
-                  {children.email}
+                <Link href={"mailto:" + dataFooter.email} target="_self">
+                  {dataFooter.email}
                 </Link>
               </div>
             )}
-            {children.phone && (
+            {dataFooter.phone && (
               <div className="flex flex-row gap-0five items-start w-full relative">
                 <Image
                   src="/images/icons/icon-phone.svg"
@@ -118,7 +155,7 @@ const FooterSection = ({ children }) => {
                   height={20}
                 />
                 <div className="flex flex-col whitespace-pre-line">
-                  {children.phone}
+                  {dataFooter.phone}
                 </div>
               </div>
             )}

@@ -31,8 +31,8 @@ const NewsSection = ({ children }) => {
   };
 
   return (
-    <div className="w-full flex justify-center gap-8 items-center">
-      <div className="box-border xl:w-90 w-full flex flex-col xl:px-7five sm:px-4 xs:px-1 items-center gap-1five py-4">
+    <section className="w-full flex justify-center gap-8 items-center">
+      <div className="box-border xl:w-90 w-full flex flex-col md:px-7five sm:px-4 xs:px-1 items-center gap-1five py-4">
         {children && (
           <>
             <h2 className="heading-2">News</h2>
@@ -43,7 +43,7 @@ const NewsSection = ({ children }) => {
           </>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 
