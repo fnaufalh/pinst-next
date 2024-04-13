@@ -1,0 +1,8 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/pinstcoi/repositories/pinst-next
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp -R ./* $DEPLOYPATH
+    - /usr/local/bin/node /opt/cpanel/ea-nodejs10/bin/npm install --production
+    - /usr/local/bin/node /opt/cpanel/ea-nodejs10/bin/npm run build
