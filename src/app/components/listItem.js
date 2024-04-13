@@ -40,7 +40,7 @@ const ListItem = ({
         {image && (
           <div className="w-2five h-1five relative">
             <Image
-              src={process.env.NEXT_PUBLIC_STRAPI_URL + image.url}
+              src={image.url}
               alt={image.name}
               fill
               sizes="(min-width: 320px) 100vw"

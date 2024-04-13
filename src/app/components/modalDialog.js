@@ -10,12 +10,13 @@ import {
   categoryContext,
 } from "../products/page";
 import { useContext } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 
 const ModalDialog = ({ title, data, handleHide }) => {
   const generateDivisions = () => {
     return (
       <div className="w-full pt-1five">
-        {data.divisions.map((item, index) => {
+        {data.division.map((item, index) => {
           return (
             <div key={index} className="flex flex-col gap-1five">
               <div className="heading-4 flex flex-row gap-1 items-center">
@@ -23,7 +24,7 @@ const ModalDialog = ({ title, data, handleHide }) => {
                 <span className="w-full border-t border-b40 border-solid flex"></span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-1">
-                {item.employees.map((item, index) => {
+                {item.employee.map((item, index) => {
                   return <CardTeamModalPortrait key={index} team={item} />;
                 })}
               </div>
@@ -56,7 +57,7 @@ const ModalDialog = ({ title, data, handleHide }) => {
               <Image
                 fill
                 src={
-                  process.env.NEXT_PUBLIC_STRAPI_URL + data.leader.avatar.url
+                  data.leader.avatar.url
                 }
                 alt={data.leader.avatar.name}
                 className="rounded-full h-1twofive w-1twofive"
@@ -72,19 +73,19 @@ const ModalDialog = ({ title, data, handleHide }) => {
           <div className="overflow-auto">
             {process.env.NEXT_PUBLIC_UI_DIALOG_AVATAR === "true" && (
               <div className="flex flex-col gap-1 pb-1">
-                {data.employees.map((item, index) => {
+                {data.employee.map((item, index) => {
                   return <CardTeamModalHorizontal key={index} team={item} />;
                 })}
               </div>
             )}
             {process.env.NEXT_PUBLIC_UI_DIALOG_AVATAR === "false" && (
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 pb-1">
-                {data.employees.map((item, index) => {
+                {data.employee.map((item, index) => {
                   return <CardTeamModalPortrait key={index} team={item} />;
                 })}
               </div>
             )}
-            {data.divisions && generateDivisions()}
+            {data.division && generateDivisions()}
           </div>
         </div>
       </div>
@@ -93,6 +94,9 @@ const ModalDialog = ({ title, data, handleHide }) => {
 };
 
 const ModalDialogFilter = ({ title, data, showDescription, handleHide }) => {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { brand, setBrand, initBrand } = useContext(brandContext);
   const { catalogue, setCatalogue, initCatalogue, setCatalogues } =
     useContext(catalogueContext);
@@ -113,8 +117,8 @@ const ModalDialogFilter = ({ title, data, showDescription, handleHide }) => {
           setSolutions(null);
           setCategory(initCategory);
           setCategories(null);
+          setBrand(item);
         }
-        setBrand(item);
         break;
       case "Catalogues":
         if (catalogue.name === item.name) {
@@ -124,8 +128,8 @@ const ModalDialogFilter = ({ title, data, showDescription, handleHide }) => {
           setSolutions(null);
           setCategory(initCategory);
           setCategories(null);
+          setCatalogue(item);
         }
-        setCatalogue(item);
         break;
       case "Solutions":
         if (solution.name === item.name) {
@@ -133,8 +137,8 @@ const ModalDialogFilter = ({ title, data, showDescription, handleHide }) => {
         } else {
           setCategory(initCategory);
           setCategories(null);
+          setSolution(item);
         }
-        setSolution(item);
         break;
       case "Categories":
         setCategory(item);
@@ -275,7 +279,7 @@ const ModalDialogProductDetails = ({ data, handleHide }) => {
             <div className="min-w-15 min-h-7five relative">
               <Image
                 fill
-                src={process.env.NEXT_PUBLIC_STRAPI_URL + data.image.url}
+                src={data.image.url}
                 alt={data.image.name}
                 sizes="(min-width: 320px) 100vw"
               />

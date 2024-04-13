@@ -3,7 +3,7 @@ import { CardService } from "../components/card";
 import { Hero } from "../components/hero";
 import { useEffect, useState } from "react";
 import CopyrightSection from "../components/copyrightSection";
-import { fetchServicesData } from "../api/servicesService";
+import { fetchServiceData } from "../api/serviceService";
 
 const Services = () => {
   const [data, setData] = useState(null);
@@ -11,7 +11,7 @@ const Services = () => {
   useEffect(() => {
     let isSubscribed = true;
 
-    fetchServicesData()
+    fetchServiceData()
       .then((data) => { 
         if (isSubscribed) {
           setData(data);

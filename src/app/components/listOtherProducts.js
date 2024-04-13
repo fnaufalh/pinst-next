@@ -5,7 +5,7 @@ const ListOtherProducts = ({ children }) => {
     return children.map((item, index) => (
       <CardOtherProduct
         key={index}
-        src={process.env.NEXT_PUBLIC_STRAPI_URL + item.url}
+        src={item.url}
         name={item.name}
       />
     ));

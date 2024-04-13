@@ -97,7 +97,7 @@ const CardTeamPortrait = ({ avatar, position, name, email, clickAction }) => {
       <div className="w-6twofive h-6twofive relative">
         <Image
           fill
-          src={process.env.NEXT_PUBLIC_STRAPI_URL + avatar.url}
+          src={avatar.url}
           alt={avatar.name}
           className="rounded-full"
           sizes="(max-width: 1440px) 100vw"
@@ -124,6 +124,7 @@ const CardTeamHorizontal = ({ avatar, position, name, email, clickAction }) => {
           alt={name}
           className="rounded-full"
           sizes="(max-width: 1440px) 100vw"
+          priority={true}
         />
       </div>
       <div className="flex flex-col gap-1five w-full sm:w-auto items-center">

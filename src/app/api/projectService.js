@@ -18,7 +18,7 @@ export const fetchRecentProjectData = async () => {
       content: marked(item.attributes.content),
     };
   });
-  console.log('Recent' , dataResult);
+  
   return dataResult;
 }
 
@@ -39,6 +39,6 @@ export const fetchMaintenanceProjectData = async () => {
       endDate: item.attributes.endDate,
     };
   });
-  console.log('Maintenance' , dataResult);
+  
   return dataResult;
 }

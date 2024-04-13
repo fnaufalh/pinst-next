@@ -7,7 +7,7 @@ export const fetchHeroData = async () => {
       "logo",
       "carousel.image",
       "partnerLabel",
-      "partnerBrands",
+      "partnerBrand",
     ],
     encodeValuesOnly: true,
   };
@@ -38,8 +38,8 @@ export const fetchHeroData = async () => {
         jsonResponse.data.attributes.logo.data.attributes.url,
     },
     partnerLabel: jsonResponse.data.attributes.partnerLabel,
-    partnerBrands: jsonResponse.data.attributes.partnerBrands.data
-      ? jsonResponse.data.attributes.partnerBrands.data.map((item) => {
+    partnerBrand: jsonResponse.data.attributes.partnerBrand.data
+      ? jsonResponse.data.attributes.partnerBrand.data.map((item) => {
           return {
             id: item.id,
             name: item.attributes.hash,

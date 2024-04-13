@@ -1,5 +1,11 @@
 "use client";
-import { createContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
+import { useSearchParams } from "next/navigation";
 import { Hero } from "../components/hero";
 import ModalTrigger from "../components/modalTrigger";
 import {
@@ -9,9 +15,8 @@ import {
 import ListProducts from "../components/listProducts";
 import ListOtherProducts from "../components/listOtherProducts";
 import QueryString from "qs";
-import { remark } from "remark";
-import { marked } from "marked";
 import CopyrightSection from "../components/copyrightSection";
+import { fetchBrandData, fetchCatalogueData, fetchSolutionData, fetchCategoryData, fetchProductData, fetchOtherProductData } from "../api/productService";
 
 export const paginationContext = createContext();
 export const brandContext = createContext();
@@ -21,6 +26,7 @@ export const categoryContext = createContext();
 export const ModalDialogProductDetailsContext = createContext();
 
 const Products = () => {
+  const searchParams = useSearchParams();
   const [otherProducts, setOtherProducts] = useState(null);
   const [products, setProducts] = useState(null);
   const [brands, setBrands] = useState(null);
@@ -32,251 +38,184 @@ const Products = () => {
   const [dataDialog, setDataDialog] = useState(null);
   const [showDescription, setShowDescription] = useState(false);
   const [titleDialog, setTitleDialog] = useState(null);
-  const initBrand = { id: null, name: "All Brands" };
+  const initBrand = useMemo(() => ({ id: null, name: "All Brands", image: null }), []);
   const [brand, setBrand] = useState(initBrand);
-  const initCatalogue = { id: null, name: "All Catalogues" };
+  const initCatalogue = useMemo(() => ({
+      id: null,
+      name: "All Catalogues",
+      image: null
+    }), []);
   const [catalogue, setCatalogue] = useState(initCatalogue);
-  const initSolution = { id: null, name: "All Solutions" };
+  const initSolution = useMemo(() => ({
+    id: null,
+    name: "All Solutions",
+    image: null
+  }), []);
   const [solution, setSolution] = useState(initSolution);
-  const initCategory = { id: null, name: "All Categories" };
+  const initCategory = useMemo(() => ({
+    id: null,
+    name: "All Categories",
+    image: null
+  }), []);
   const [category, setCategory] = useState(initCategory);
   const [newPage, setNewPage] = useState(1);
   const [meta, setMeta] = useState(null);
 
-  const date = new Date();
-  const thisYear = date.getFullYear();
-
-  useEffect(() => {
-    const fetchBrandData = async () => {
-      const params = () =>
-        QueryString.stringify({ populate: "*" }, { encodeValuesOnly: true });
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_API}/brands?${params()}`
-      );
-
-      const jsonResponse = await response.json();
-      const dataMapping = jsonResponse.data.map((item) => {
-        return {
-          id: item.id,
-          name: item.attributes.name,
-          image: {
-            id: item.attributes.image.data.id,
-            url: item.attributes.image.data.attributes.url,
-            name: item.attributes.image.data.attributes.hash,
-          },
-        };
-      });
-      setBrands(dataMapping);
-    };
-
-    const fetchOtherProductData = async () => {
-      const params = () =>
-        QueryString.stringify({ populate: "*" }, { encodeValuesOnly: true });
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_API}/other-products?${params()}`
-      );
-
-      const jsonResponse = await response.json();
-      const dataMapping = jsonResponse.data.map((item) => {
-        return {
-          id: item.id,
-          name: item.attributes.image.data.attributes.hash,
-          url: item.attributes.image.data.attributes.url,
-        };
-      });
-      setOtherProducts(dataMapping);
-    };
-
-    fetchBrandData();
-    fetchOtherProductData();
-  }, []);
-
   useEffect(() => {
     let isSubscribed = true;
-    const fetchProductData = async () => {
-      const query = {
-        populate: "*",
-        pagination: { pageSize: 9, page: newPage },
-      };
 
-      if (brand.id) {
-        if (catalogue.id) {
-          if (solution.id) {
-            if (category.id) {
-              query.filters = {
-                category_product: { id: { $eq: category.id } },
-              };
-            } else {
-              query.filters = {
-                solution: { id: { $eq: solution.id } },
-              };
-            }
-          } else {
-            query.filters = {
-              catalogue: { id: { $eq: catalogue.id } },
-            };
+    fetchBrandData()
+      .then((data) => {
+        if (isSubscribed) {
+          setBrands(data);
+          if (searchParams.has("brand") && data.length > 0) {
+            setBrand(data.find((item) => item.id == searchParams.get("brand")));
           }
-        } else {
-          query.filters = {
-            brand: { id: { $eq: brand.id } },
-          };
         }
-      }
-
-      const params = () =>
-        QueryString.stringify(query, { encodeValuesOnly: true });
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_API}/products?${params()}`
-      );
-
-      const jsonResponse = await response.json();
-
-      const processedContent = await Promise.all(
-        jsonResponse.data.map((item) => {
-          return remark().processSync(item.attributes.description);
-        })
-      );
-
-      const dataMapping = jsonResponse.data.map((item, index) => {
-        return {
-          id: item.id,
-          name: item.attributes.name,
-          description: marked.parse(processedContent[index].toString()),
-          image: {
-            name: item.attributes.image.data.attributes.hash,
-            url: item.attributes.image.data.attributes.url,
-          },
-        };
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
       });
-      if (isSubscribed) {
-        setProducts(dataMapping);
-        setMeta(jsonResponse.meta);
-      }
+    
+    fetchOtherProductData()
+      .then((data) => {
+        if (isSubscribed) {
+          setOtherProducts(data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+      });
+    
+    return () => (isSubscribed = false);
+  }, [searchParams]);
+
+  useEffect(() => {
+    let isSubscribed = true;
+
+    const filters = {
+      filters: {
+        brand: {
+          id: searchParams.has("brand") ? searchParams.get("brand") : null,
+        },
+        catalogue: {
+          id: searchParams.has("catalogue") ? searchParams.get("catalogue") : null,
+        },
+        solution: {
+          id: searchParams.has("solution") ? searchParams.get("solution") : null,
+        },
+        categoryProduct: {
+          id: searchParams.has("categoryProduct") ? searchParams.get("categoryProduct") : null,
+        },
+      },
     };
-    fetchProductData().catch(console.error);
+
+    fetchProductData(filters)
+      .then((data) => {
+        if (isSubscribed) {
+          setProducts(data);
+          setNewPage(1);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+      });
+    
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-
     return () => (isSubscribed = false);
-  }, [brand, catalogue, solution, category, newPage]);
+  }, [brand, catalogue, solution, category, searchParams]);
 
   useEffect(() => {
     let isSubscribed = true;
-    const fetchCatalogueData = async () => {
-      const query = {
-        populate: "*",
-      };
-
-      if (brand.id) {
-        query.filters = {
-          brand: { id: { $eq: brand.id } },
-        };
-      }
-      const params = () =>
-        QueryString.stringify(query, { encodeValuesOnly: true });
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_API}/catalogues?${params()}`
-      );
-
-      const jsonResponse = await response.json();
-      const dataMapping = jsonResponse.data.map((item) => {
-        return {
-          id: item.id,
-          name: item.attributes.name,
-        };
-      });
-      if (isSubscribed) {
-        setCatalogues(dataMapping);
-        setNewPage(1);
-      }
+    const filters = {
+      filters: {
+        brand: {
+          id: searchParams.has("brand") ? searchParams.get("brand") : null,
+        },
+      },
     };
-    if (brand.id) {
-      fetchCatalogueData().catch(console.error);
-    }
-
+    
+    fetchCatalogueData(filters)
+      .then((data) => {
+        if (isSubscribed) {
+          setCatalogues(data);
+          setNewPage(1);
+          if (searchParams.has("catalogue") && data.length > 0) {
+            setCatalogue(data.find((item) => item.id == searchParams.get("catalogue")));
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+      });
+    
     return () => (isSubscribed = false);
-  }, [brand]);
+  }, [brand, searchParams]);
 
   useEffect(() => {
     let isSubscribed = true;
-    const fetchSolutionData = async () => {
-      const query = {
-        populate: "*",
-      };
 
-      if (catalogue.id) {
-        query.filters = {
-          catalogue: { id: { $eq: catalogue.id } },
-        };
-      }
-      const params = () =>
-        QueryString.stringify(query, { encodeValuesOnly: true });
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_API}/solutions?${params()}`
-      );
-
-      const jsonResponse = await response.json();
-      const dataMapping = jsonResponse.data.map((item) => {
-        return {
-          id: item.id,
-          name: item.attributes.name,
-          description: item.attributes.description,
-        };
-      });
-      if (isSubscribed) {
-        setSolutions(dataMapping);
-        setNewPage(1);
-      }
+    const filters = {
+      filters: {
+        brand: {
+          id: searchParams.has("brand") ? searchParams.get("brand") : null,
+        },
+        catalogue: {
+          id: searchParams.has("catalogue") ? searchParams.get("catalogue") : null,
+        },
+      },
     };
-    if (catalogue.id) {
-      fetchSolutionData().catch(console.error);
-    }
-
+    
+    fetchSolutionData(filters)
+      .then((data) => {
+        if (isSubscribed) {
+          setSolutions(data);
+          setNewPage(1);
+          if (searchParams.has("solution") && data.length > 0) {
+            setSolution(data.find((item) => item.id == searchParams.get("solution")));
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+      });
+    
     return () => (isSubscribed = false);
-  }, [catalogue]);
+  }, [catalogue, searchParams]);
 
   useEffect(() => {
     let isSubscribed = true;
-    const fetchCategoryData = async () => {
-      const query = {
-        populate: "*",
-      };
-
-      if (solution.id) {
-        query.filters = {
-          solution: { id: { $eq: solution.id } },
-        };
-      }
-      const params = () =>
-        QueryString.stringify(query, { encodeValuesOnly: true });
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_API}/category-products?${params()}`
-      );
-
-      const jsonResponse = await response.json();
-      const dataMapping = jsonResponse.data.map((item) => {
-        return {
-          id: item.id,
-          name: item.attributes.name,
-          description: item.attributes.description,
-        };
-      });
-      if (isSubscribed) {
-        setCategories(dataMapping);
-        setNewPage(1);
-      }
+    
+    const filters = {
+      filters: {
+        brand: {
+          id: searchParams.has("brand") ? searchParams.get("brand") : null,
+        },
+        catalogue: {
+          id: searchParams.has("catalogue") ? searchParams.get("catalogue") : null,
+        },
+        solution: {
+          id: searchParams.has("solution") ? searchParams.get("solution") : null,
+        },
+      },
     };
-    if (solution.id) {
-      fetchCategoryData().catch(console.error);
-    }
 
+    fetchCategoryData(filters)
+      .then((data) => {
+        if (isSubscribed) {
+          setCategories(data);
+          setNewPage(1);
+          if (searchParams.has("category") && data.length > 0) {
+            setCategory(data.find((item) => item.id == searchParams.get("category")));
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data", error);
+      });
+    
     return () => (isSubscribed = false);
-  }, [solution]);
+  }, [solution, searchParams]);
 
   const handleHide = () => {
     setIsVisible(false);
@@ -340,7 +279,7 @@ const Products = () => {
                       value={category}
                       clickAction={() => {
                         if (categories && categories.length > 0) {
-                          clickAction(categories, "Categories", category, true);
+                          clickAction(categories, "Categories", true);
                         }
                       }}
                     />

@@ -25,7 +25,7 @@ function ExclusiveBrandsSection({children}) {
               ></span>
             </p>
             <div className="flex flex-wrap justify-center gap-1five">
-              {children.brandImages.map((item, index) => (
+              {children.brandImage.map((item, index) => (
                 <div
                   key={index}
                   className="min-w-7five lg:min-w-[160px] min-h-[68px] lg:min-h-[90px] relative"

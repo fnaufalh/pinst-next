@@ -1,3 +1,4 @@
+import { marked } from "marked";
 import { fetchData } from "./apiService";
 
 export const fetchServiceData = async () => {
@@ -14,7 +15,7 @@ export const fetchServiceData = async () => {
     return {
       id: item.id,
       title: item.attributes.title,
-      content: item.attributes.content,
+      content: marked(item.attributes.content),
       icon: item.attributes.icon.data
         ? {
             id: item.attributes.icon.data.id,
@@ -24,6 +25,6 @@ export const fetchServiceData = async () => {
         : null,
     };
   });
-  console.log(dataResult);
+  
   return dataResult;
 }

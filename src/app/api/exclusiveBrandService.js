@@ -14,8 +14,8 @@ export const fetchExclusiveBrandsData = async () => {
     id: jsonResponse.data.id,
     title: jsonResponse.data.attributes.title,
     highlightText: jsonResponse.data.attributes.highlightText,
-    brandImages: jsonResponse.data.attributes.brandImages.data
-      ? jsonResponse.data.attributes.brandImages.data.map((item) => {
+    brandImage: jsonResponse.data.attributes.brandImage.data
+      ? jsonResponse.data.attributes.brandImage.data.map((item) => {
           return {
             id: item.id,
             name: item.attributes.hash,

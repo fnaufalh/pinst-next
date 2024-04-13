@@ -84,7 +84,7 @@ const HeroMain = ({ children }) => {
                     {children.partnerLabel}
                   </span>
                   <div className="flex flex-wrap justify-center items-end md:justify-end gap-1five">
-                    {children.partnerBrands.map((brand, index) => (
+                    {children.partnerBrand.map((brand, index) => (
                       <div
                         key={index}
                         className="min-w-[49px] sm:min-w-[75px] min-h-[28px] sm:min-h-[43px] relative"

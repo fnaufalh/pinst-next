@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { CardTeamPortrait, CardTeamHorizontal } from "../components/card";
 import { ModalDialog } from "../components/modalDialog";
@@ -47,7 +46,6 @@ const ContentTeams = ({ children }) => {
             <div className="box-border xl:w-90 w-full flex items-center justify-center">
               <CardTeamHorizontal
                 avatar={
-                  process.env.NEXT_PUBLIC_STRAPI_URL +
                   firstTeam.leader.avatar.url
                 }
                 position={firstTeam.leader.position}
