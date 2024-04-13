@@ -25,7 +25,7 @@ export const fetchNewsData = async (getParams) => {
         ? {
             id: item.attributes.thumbnail.data.id,
             name: item.attributes.thumbnail.data.attributes.hash,
-            url: item.attributes.thumbnail.data.attributes.url,
+            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.attributes.thumbnail.data.attributes.url,
           }
         : null,
       publishedAt: item.attributes.publishedAt,

@@ -15,7 +15,7 @@ const CardNews = ({ thumbnail, title, summary, publishedAt, clickAction }) => {
       {thumbnail && (
         <div className="w-full min-h-12 relative">
           <Image
-            src={process.env.NEXT_PUBLIC_STRAPI_URL + thumbnail.url}
+            src={thumbnail.url}
             alt={thumbnail.name}
             fill
             sizes="(min-width: 320px) 100vw"
@@ -45,7 +45,7 @@ const CardProduct = ({ image, name, clickAction }) => {
       <div className="w-full min-h-12 relative">
         <Image
           fill
-          src={process.env.NEXT_PUBLIC_STRAPI_URL + image.url}
+          src={image.url}
           alt={image.name}
           sizes="(min-width: 320px) 100vw"
           className="object-contain aspect-auto"
@@ -146,7 +146,7 @@ const CardTeamModalHorizontal = ({ team }) => {
         <div className="w-4 h-4 relative">
           <Image
             fill
-            src={process.env.NEXT_PUBLIC_STRAPI_URL + team.avatar.url}
+            src={team.avatar.url}
             alt={team.name}
             sizes="(min-width: 320px) 100vw"
             className="rounded-full"

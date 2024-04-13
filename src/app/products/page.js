@@ -14,7 +14,6 @@ import {
 } from "../components/modalDialog";
 import ListProducts from "../components/listProducts";
 import ListOtherProducts from "../components/listOtherProducts";
-import QueryString from "qs";
 import CopyrightSection from "../components/copyrightSection";
 import { fetchBrandData, fetchCatalogueData, fetchSolutionData, fetchCategoryData, fetchProductData, fetchOtherProductData } from "../api/productService";
 
@@ -95,25 +94,34 @@ const Products = () => {
 
     const filters = {
       filters: {
-        brand: {
-          id: searchParams.has("brand") ? searchParams.get("brand") : null,
-        },
-        catalogue: {
-          id: searchParams.has("catalogue") ? searchParams.get("catalogue") : null,
-        },
-        solution: {
-          id: searchParams.has("solution") ? searchParams.get("solution") : null,
-        },
-        categoryProduct: {
-          id: searchParams.has("categoryProduct") ? searchParams.get("categoryProduct") : null,
-        },
+        ...(searchParams.has("brand") && {
+          brand: {
+            id: searchParams.get("brand")
+          },
+        }),
+        ...(searchParams.has("catalogue") && {
+          catalogue: {
+            id: searchParams.get("catalogue")
+          },
+        }),
+        ...(searchParams.has("solution") && {
+          solution: {
+            id: searchParams.get("solution")
+          },
+        }),
+        ...(searchParams.has("category") && {
+          category: {
+            id: searchParams.get("category")
+          },
+        }),
       },
     };
 
     fetchProductData(filters)
-      .then((data) => {
+      .then(({ dataResult, metaResult}) => {
         if (isSubscribed) {
-          setProducts(data);
+          setProducts(dataResult);
+          setMeta(metaResult);
           setNewPage(1);
         }
       })
@@ -129,9 +137,11 @@ const Products = () => {
     let isSubscribed = true;
     const filters = {
       filters: {
-        brand: {
-          id: searchParams.has("brand") ? searchParams.get("brand") : null,
-        },
+        ...(searchParams.has("brand") && {
+          brand: {
+            id: searchParams.get("brand")
+          },
+        }),
       },
     };
     
@@ -157,12 +167,16 @@ const Products = () => {
 
     const filters = {
       filters: {
-        brand: {
-          id: searchParams.has("brand") ? searchParams.get("brand") : null,
-        },
-        catalogue: {
-          id: searchParams.has("catalogue") ? searchParams.get("catalogue") : null,
-        },
+        ...(searchParams.has("brand") && {
+          brand: {
+            id: searchParams.get("brand")
+          },
+        }),
+        ...(searchParams.has("catalogue") && {
+          catalogue: {
+            id: searchParams.get("catalogue")
+          },
+        }),
       },
     };
     
@@ -188,15 +202,21 @@ const Products = () => {
     
     const filters = {
       filters: {
-        brand: {
-          id: searchParams.has("brand") ? searchParams.get("brand") : null,
-        },
-        catalogue: {
-          id: searchParams.has("catalogue") ? searchParams.get("catalogue") : null,
-        },
-        solution: {
-          id: searchParams.has("solution") ? searchParams.get("solution") : null,
-        },
+        ...(searchParams.has("brand") && {
+          brand: {
+            id: searchParams.get("brand")
+          },
+        }),
+        ...(searchParams.has("catalogue") && {
+          catalogue: {
+            id: searchParams.get("catalogue")
+          },
+        }),
+        ...(searchParams.has("solution") && {
+          solution: {
+            id: searchParams.get("solution")
+          },
+        }),
       },
     };
 
@@ -286,7 +306,7 @@ const Products = () => {
                   </div>
                 </div>
                 <div className="bg-b20 w-full flex justify-center gap-8 items-center">
-                  <div className="box-border xl:w-90 w-full flex flex-col xl:px-7five md:px-7five sm:px-4 xs:px-1 gap-1five py-1">
+                  <div className="box-border xl:w-90 w-full flex flex-col xl:px-7five md:px-7five sm:px-4 xs:px-1 gap-1five py-4">
                     {products && (
                       <ModalDialogProductDetailsContext.Provider
                         value={{

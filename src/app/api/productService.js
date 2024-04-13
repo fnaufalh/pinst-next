@@ -81,8 +81,8 @@ export const fetchProductData = async (getParams) => {
         : null,
     };
   });
-  
-  return dataResult;
+  const metaResult = jsonResponse.meta;
+  return { dataResult, metaResult };
 }
 
 //fetchCatalogueData function
