@@ -26,7 +26,7 @@ const DetailNews = ({ children }) => {
                     <Image
                       fill
                       src={
-                        process.env.NEXT_PUBLIC_STRAPI_URL + item.thumbnail.url
+                        item.thumbnail.url
                       }
                       alt={item.thumbnail.name}
                       sizes="(min-width: 320px) 100vw"
