@@ -6,7 +6,8 @@ export const fetchData = async (slug, params = {}) => {
     const queryString = QueryString.stringify(params, {
       encodeValuesOnly: true,
     });
-    const token = process.env.STRAPI_API_TOKEN;
+    const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+    console.log("token", token);
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_STRAPI_API}/${slug}?${queryString}`,
