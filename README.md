@@ -20,6 +20,20 @@ You can start editing the page by modifying `app/page.js`. The page auto-updates
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+## Environment Variables
+
+Create a `.env.server` (or `.env.local`) file and provide the following values:
+
+```bash
+NEXT_PUBLIC_UI_DIALOG_AVATAR='false'
+NEXT_PUBLIC_URL='https://v2.pinst.co.id'
+NEXT_PUBLIC_STRAPI_URL='https://cms.pinst.co.id'
+NEXT_PUBLIC_STRAPI_API='https://cms.pinst.co.id/api'
+STRAPI_API_TOKEN=<your_strapi_api_token>
+```
+
+`STRAPI_API_TOKEN` should be a read-only API token generated from Strapi so API requests can be authenticated.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
