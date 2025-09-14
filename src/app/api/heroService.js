@@ -3,10 +3,8 @@ import { fetchData } from "./apiService";
 export const fetchHeroData = async () => {
   const params = {
     populate: [
-      "hero",
       "logo",
       "carousel.image",
-      "partnerLabel",
       "partnerBrand",
     ],
     encodeValuesOnly: true,
@@ -18,32 +16,32 @@ export const fetchHeroData = async () => {
   );
 
   const data = {
-    id: jsonResponse.data.id,
-    title: jsonResponse.data.attributes.title,
-    slogan: jsonResponse.data.attributes.slogan,
-    carouselImage: jsonResponse.data.attributes.carousel.image.data
-      ? jsonResponse.data.attributes.carousel.image.data.map((item) => {
+    id: jsonResponse.data.documentId,
+    title: jsonResponse.data.title,
+    slogan: jsonResponse.data.slogan,
+    carouselImage: jsonResponse.data.carousel.image
+      ? jsonResponse.data.carousel.image.map((item) => {
           return {
             id: item.id,
-            name: item.attributes.hash,
-            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.attributes.url,
+            name: item.hash,
+            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.url,
           };
         })
       : null,
     logo: {
-      id: jsonResponse.data.attributes.logo.data.id,
-      name: jsonResponse.data.attributes.logo.data.attributes.hash,
+      id: jsonResponse.data.logo.id,
+      name: jsonResponse.data.logo.hash,
       url:
         process.env.NEXT_PUBLIC_STRAPI_URL +
-        jsonResponse.data.attributes.logo.data.attributes.url,
+        jsonResponse.data.logo.url,
     },
-    partnerLabel: jsonResponse.data.attributes.partnerLabel,
-    partnerBrand: jsonResponse.data.attributes.partnerBrand.data
-      ? jsonResponse.data.attributes.partnerBrand.data.map((item) => {
+    partnerLabel: jsonResponse.data.partnerLabel,
+    partnerBrand: jsonResponse.data.partnerBrand
+      ? jsonResponse.data.partnerBrand.map((item) => {
           return {
             id: item.id,
-            name: item.attributes.hash,
-            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.attributes.url,
+            name: item.hash,
+            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.url,
           };
         })
       : null,

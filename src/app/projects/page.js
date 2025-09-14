@@ -49,10 +49,10 @@ const Projects = () => {
       <div key={index} className="flex flex-row gap-1five">
         <div className="min-w-6twofive max-w-6twofive">
           {HTMLReactParser(
-            item.attributes.start_date + " - " + item.attributes.finish_date
+            item.start_date + " - " + item.finish_date
           )}
         </div>
-        <div>{HTMLReactParser(item.attributes.content)}</div>
+        <div>{HTMLReactParser(item.content)}</div>
       </div>
     ));
   };

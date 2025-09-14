@@ -2,7 +2,10 @@ import { fetchData } from "./apiService";
 
 export const fetchClientData = async () => {
   const params = {
-    populate: "*",
+    populate: [
+      "image",
+    ],
+    encodeValuesOnly: true,
   };
 
   const jsonResponse = await fetchData(
@@ -13,10 +16,10 @@ export const fetchClientData = async () => {
   const dataResult = jsonResponse.data.map((item) => {
     return {
       id: item.id,
-      name: item.attributes.image.data.attributes.hash,
+      name: item.image.hash,
       url:
         process.env.NEXT_PUBLIC_STRAPI_URL +
-        item.attributes.image.data.attributes.url,
+        item.image.url,
     };
   });
 

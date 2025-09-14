@@ -75,14 +75,16 @@ const CardService = ({ title, content, icon }) => {
     <div className="w-full flex flex-col items-start bg-b0">
       <div className="flex flex-col items-start gap-1five p-2five">
         <div className="flex md:flex-row flex-col gap-1five">
-          <div className="w-4 h-4 relative">
-            <Image
-              fill
-              src={icon.url}
-              alt={icon.name}
-              sizes="(min-width: 320px) 100vw"
-            />
-          </div>
+          {icon && (
+            <div className="w-4 h-4 relative">
+              <Image
+                fill
+                src={icon.url}
+                alt={icon.name}
+                sizes="(min-width: 320px) 100vw"
+              />
+            </div>
+          )}
           <span className="heading-4 flex items-center">{title}</span>
         </div>
         <div dangerouslySetInnerHTML={{ __html: content }}></div>

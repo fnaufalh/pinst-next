@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import CopyrightSection from "./copyrightSection";
-import { fetchFooterData } from "../api/footerService";
+import { fetchFooterData, submitInquiry } from "../api/footerService";
 
 const FooterSection = () => {
   const [formData, setFormData] = useState({
@@ -32,14 +32,26 @@ const FooterSection = () => {
   },
   []);
 
-  const clickAction = () => {
-    if (formData.fullname && formData.company && formData.inquiry) {
-      let target = `mailto:info@pinst.co.id?subject=Inquiry from PINST Website&body=Hi, saya ${formData.fullname} dari ${formData.company}. ${formData.inquiry}`;
-      window.location.assign(target);
-    } else {
-      alert("Fullname, company, inquiry cannot be empty.");
+const clickAction = async () => {
+  const { fullname, company, inquiry } = formData;
+
+  if (fullname && company && inquiry) {
+    try {
+      const response = await submitInquiry({ fullname, company, inquiry });
+      if (response) {
+        alert('Inquiry sent successfully.');
+        setFormData({ fullname: "", company: "", inquiry: "" });
+      } else {
+        alert('Failed to send inquiry. Please try again later.');
+      }
+    } catch (error) {
+      alert('Failed to send inquiry. Please try again later.');
     }
-  };
+  } else {
+    alert('Fullname, company, inquiry cannot be empty.');
+  }
+};
+
 
   return (
     <div className="bg-b20 pt-4 flex flex-col justify-center w-full gap-8 items-center">
@@ -59,7 +71,7 @@ const FooterSection = () => {
           <div className="flex items-start gap-6 self-stretch">
             <Input
               label="Company"
-              type="email"
+              type="text"
               value={formData.company}
               required
               onChange={(event) =>

@@ -7,7 +7,7 @@ export const fetchData = async (slug, params = {}) => {
       encodeValuesOnly: true,
     });
     const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-    console.log("token", token);
+    // Use the token if it exists, otherwise use an empty object
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_STRAPI_API}/${slug}?${queryString}`,
@@ -16,6 +16,22 @@ export const fetchData = async (slug, params = {}) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching data", error);
+    throw error;
+  }
+};
+
+export const postData = async (slug, data) => {
+  try {
+    const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_STRAPI_API}/${slug}`,
+      data,
+      { headers }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error posting data", error);
     throw error;
   }
 };

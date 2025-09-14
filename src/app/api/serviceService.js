@@ -3,7 +3,9 @@ import { fetchData } from "./apiService";
 
 export const fetchServiceData = async () => {
   const params = {
-    populate: "*",
+    populate: [
+      "icon",
+    ]
   };
 
   const jsonResponse = await fetchData(
@@ -14,13 +16,13 @@ export const fetchServiceData = async () => {
   const dataResult = jsonResponse.data.map((item) => {
     return {
       id: item.id,
-      title: item.attributes.title,
-      content: marked(item.attributes.content),
-      icon: item.attributes.icon.data
+      title: item.title,
+      content: marked(item.content),
+      icon: item.icon
         ? {
-            id: item.attributes.icon.data.id,
-            name: item.attributes.icon.data.attributes.hash,
-            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.attributes.icon.data.attributes.url,
+            id: item.icon.id,
+            name: item.icon.hash,
+            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.icon.url,
           }
         : null,
     };

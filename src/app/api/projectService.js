@@ -14,8 +14,8 @@ export const fetchRecentProjectData = async () => {
   const dataResult = jsonResponse.data.map((item) => {
     return {
       id: item.id,
-      title: item.attributes.title,
-      content: marked(item.attributes.content),
+      title: item.title,
+      content: marked(item.content),
     };
   });
   
@@ -34,9 +34,9 @@ export const fetchMaintenanceProjectData = async () => {
 
   const dataResult = jsonResponse.data.map((item) => {
     return {
-      content: item.attributes.content,
-      startDate: item.attributes.startDate,
-      endDate: item.attributes.endDate,
+      content: item.content,
+      startDate: item.startDate,
+      endDate: item.endDate,
     };
   });
   

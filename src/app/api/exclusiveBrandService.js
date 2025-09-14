@@ -2,7 +2,10 @@ import { fetchData } from "./apiService";
 
 export const fetchExclusiveBrandsData = async () => {
   const params = {
-    populate: "*",
+    populate: [
+      "brandImage",
+    ],
+    encodeValuesOnly: true,
   };
 
   const jsonResponse = await fetchData(
@@ -11,15 +14,15 @@ export const fetchExclusiveBrandsData = async () => {
   );
 
   const dataResult = {
-    id: jsonResponse.data.id,
-    title: jsonResponse.data.attributes.title,
-    highlightText: jsonResponse.data.attributes.highlightText,
-    brandImage: jsonResponse.data.attributes.brandImage.data
-      ? jsonResponse.data.attributes.brandImage.data.map((item) => {
+    id: jsonResponse.data.documentId,
+    title: jsonResponse.data.title,
+    highlightText: jsonResponse.data.highlightText,
+    brandImage: jsonResponse.data.brandImage
+      ? jsonResponse.data.brandImage.map((item) => {
           return {
             id: item.id,
-            name: item.attributes.hash,
-            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.attributes.url,
+            name: item.hash,
+            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.url,
           };
         })
       : null,

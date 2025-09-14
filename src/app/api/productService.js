@@ -16,12 +16,12 @@ export const fetchBrandData = async (getParams) => {
   const dataResult = jsonResponse.data.map((item) => {
     return {
       id: item.id,
-      name: item.attributes.name,
-      image: item.attributes.image.data
+      name: item.name,
+      image: item.image
         ? {
-            id: item.attributes.image.data.id,
-            name: item.attributes.image.data.attributes.hash,
-            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.attributes.image.data.attributes.url,
+            id: item.image.id,
+            name: item.image.hash,
+            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.image.url,
           }
         : null,
     };
@@ -44,10 +44,10 @@ export const fetchOtherProductData = async () => {
   const dataResult = jsonResponse.data.map((item) => {
     return {
       id: item.id,
-      name: item.attributes.image.data.attributes.hash,
+      name: item.image.hash,
       url:
         process.env.NEXT_PUBLIC_STRAPI_URL +
-        item.attributes.image.data.attributes.url,
+        item.image.url,
     }
   });
   
@@ -71,13 +71,13 @@ export const fetchProductData = async (getParams) => {
   const dataResult = jsonResponse.data.map((item) => {
     return {
       id: item.id,
-      name: item.attributes.name,
-      description: item.attributes.description ? marked(item.attributes.description) : null,
-      image: item.attributes.image.data
+      name: item.name,
+      description: item.description ? marked(item.description) : null,
+      image: item.image
         ? {
-            id: item.attributes.image.data.id,
-            name: item.attributes.image.data.attributes.hash,
-            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.attributes.image.data.attributes.url,
+            id: item.image.id,
+            name: item.image.hash,
+            url: process.env.NEXT_PUBLIC_STRAPI_URL + item.image.url,
           }
         : null,
     };
@@ -101,7 +101,7 @@ export const fetchCatalogueData = async (getParams) => {
   const dataResult = jsonResponse.data.map((item) => {
     return {
       id: item.id,
-      name: item.attributes.name,
+      name: item.name,
     };
   });
 
@@ -123,8 +123,8 @@ export const fetchSolutionData = async (getParams) => {
   const dataResult = jsonResponse.data.map((item) => {
     return {
       id: item.id,
-      name: item.attributes.name,
-      description: item.attributes.description,
+      name: item.name,
+      description: item.description,
     }
   });
   
@@ -146,8 +146,8 @@ export const fetchCategoryData = async (getParams) => {
   const dataResult = jsonResponse.data.map((item) => {
     return {
       id: item.id,
-      name: item.attributes.name,
-      description: item.attributes.description,
+      name: item.name,
+      description: item.description,
     }
   });
   

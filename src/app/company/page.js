@@ -2,7 +2,7 @@
 import { Hero } from "../components/hero";
 import Image from "next/image";
 import { marked } from "marked";
-import CopyrightSection from "../components/copyrightSection";
+import FooterSection from "../components/footerSection";
 import { fetchCompanyData } from "../api/companyService";
 import { useEffect, useState } from "react";
 
@@ -58,7 +58,7 @@ const Company = () => {
           </div>
         </div>
       )}
-      <CopyrightSection />
+      <FooterSection />
     </>
   );
 };

@@ -22,45 +22,45 @@ export const fetchTeamData = async () => {
   const dataResult = jsonResponse.data.map((item) => {
     return {
       id: item.id,
-      name: item.attributes.name,
+      name: item.name,
       leader: {
-        id: item.attributes.leader.data.id,
-        name: item.attributes.leader.data.attributes.name,
-        email: item.attributes.leader.data.attributes.email,
-        position: item.attributes.leader.data.attributes.position.data.attributes.name,
-        avatar: item.attributes.leader.data.attributes.avatar.data
+        id: item.leader.id,
+        name: item.leader.name,
+        email: item.leader.email,
+        position: item.leader.position.name,
+        avatar: item.leader.avatar
           ? {
-              id: item.attributes.leader.data.attributes.avatar.data.id,
-              name: item.attributes.leader.data.attributes.avatar.data.attributes.hash,
-              url: process.env.NEXT_PUBLIC_STRAPI_URL + item.attributes.leader.data.attributes.avatar.data.attributes.url,
+              id: item.leader.avatar.id,
+              name: item.leader.avatar.hash,
+              url: process.env.NEXT_PUBLIC_STRAPI_URL + item.leader.avatar.url,
             }
           : null,
       },
-      division: item.attributes.division.data
-        ? item.attributes.division.data.map((item) => {
+      division: item.division
+        ? item.division.map((item) => {
             return {
               id: item.id,
-              name: item.attributes.name,
-              employee: item.attributes.employee.data
-                ? item.attributes.employee.data.map((item) => {
+              name: item.name,
+              employee: item.employee
+                ? item.employee.map((item) => {
                     return {
                       id: item.id,
-                      name: item.attributes.name,
-                      email: item.attributes.email,
-                      position: item.attributes.position.data.attributes.name,
+                      name: item.name,
+                      email: item.email,
+                      position: item.position.name,
                     };
                   })
                 : null,
             };
           })
         : null,
-      employee: item.attributes.employee.data
-        ? item.attributes.employee.data.map((item) => {
+      employee: item.employee
+        ? item.employee.map((item) => {
             return {
               id: item.id,
-              name: item.attributes.name,
-              email: item.attributes.email,
-              position: item.attributes.position.data.attributes.name,
+              name: item.name,
+              email: item.email,
+              position: item.position.name,
             };
           })
         : null,

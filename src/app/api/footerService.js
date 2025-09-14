@@ -1,4 +1,4 @@
-import { fetchData } from "./apiService";
+import { fetchData, postData } from "./apiService";
 
 export const fetchFooterData = async () => {
   const params = {
@@ -9,17 +9,27 @@ export const fetchFooterData = async () => {
     'about',
     params
   );
-
+  
   const dataResult = {
-    id: jsonResponse.data.id,
-    title: jsonResponse.data.attributes.title,
-    address: jsonResponse.data.attributes.address,
-    websiteLink: jsonResponse.data.attributes.websiteLink,
-    websiteName: jsonResponse.data.attributes.websiteName,
-    email: jsonResponse.data.attributes.email,
-    phone: jsonResponse.data.attributes.phone,
+    id: jsonResponse.data.documentId,
+    title: jsonResponse.data.title,
+    address: jsonResponse.data.address,
+    websiteLink: jsonResponse.data.websiteLink,
+    websiteName: jsonResponse.data.websiteName,
+    email: jsonResponse.data.email,
+    phone: jsonResponse.data.phone,
   };
-
+  
   return dataResult;
 
-}
+};
+
+export const submitInquiry = async (inquiryData) => {
+  try {
+    const response = await postData("inquiries", { data: inquiryData });
+    return response;
+  } catch (error) {
+    console.error("Error submitting inquiry", error);
+    throw error;
+  }
+};

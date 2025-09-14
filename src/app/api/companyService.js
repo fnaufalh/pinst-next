@@ -2,7 +2,9 @@ import { fetchData } from "./apiService";
 
 export const fetchCompanyData = async () => {
   const params = {
-    populate: "*",
+    populate: [
+      "image",
+    ]
   };
 
   const jsonResponse = await fetchData(
@@ -11,14 +13,14 @@ export const fetchCompanyData = async () => {
   );
 
   const dataResult = {
-    id: jsonResponse.data.id,
-    title: jsonResponse.data.attributes.title,
-    content: jsonResponse.data.attributes.content,
-    image: jsonResponse.data.attributes.image.data
+    id: jsonResponse.data.documentId,
+    title: jsonResponse.data.title,
+    content: jsonResponse.data.content,
+    image: jsonResponse.data.image
       ? {
-          id: jsonResponse.data.attributes.image.data.id,
-          name: jsonResponse.data.attributes.image.data.attributes.hash,
-          url: process.env.NEXT_PUBLIC_STRAPI_URL + jsonResponse.data.attributes.image.data.attributes.url,
+          id: jsonResponse.data.image.id,
+          name: jsonResponse.data.image.hash,
+          url: process.env.NEXT_PUBLIC_STRAPI_URL + jsonResponse.data.image.url,
         }
       : null,
   };
