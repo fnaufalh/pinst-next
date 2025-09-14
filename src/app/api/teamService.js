@@ -3,7 +3,8 @@ import { fetchData } from "./apiService";
 export const fetchTeamData = async () => {
   const params = {
     populate: [
-      "team",
+      // "*",
+      // "team",
       "leader",
       "leader.position",
       "leader.avatar",
